@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "GPUCONV-Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            // 关键路径：匹配 CMake Debug 输出（必须存在该 .exe）
+            "program": "${workspaceFolder}/bin/Debug/samples_cpu_vs_gpu.exe",
+            "args": [],
+            "stopAtEntry": true,  // 设为 true：调试时自动在 main 函数暂停（验证是否能断点）
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+             "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.0\\bin;${env:PATH}"
+                }
+            ],
+        }
+    ]
+}

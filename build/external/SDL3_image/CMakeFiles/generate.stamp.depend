@@ -1,0 +1,15 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeParseArguments.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakePushCheckState.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/CMakeLists.txt
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/cmake/GetGitRevisionDescription.cmake
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/cmake/PrivateSdlFunctions.cmake
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/cmake/sdlcpu.cmake
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/cmake/sdlmanpages.cmake
+D:/C++/gpu_conv_lib_cmake/external/SDL3_image/cmake/sdlplatform.cmake

@@ -1,0 +1,111 @@
+﻿/**
+ * 卷积统一入口（对外 API）
+ */
+#include "gpu_convolution.hpp"
+#include "cpu_convolution.hpp"
+#include "kernel.hpp"
+#include "filter.hpp"
+#include "image_viewer.hpp"
+#include <iostream>
+#include <chrono>
+namespace gconv {
+
+/**
+ * @brief 自定义卷积函数
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param k 内核矩阵
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool filter(const std::string& src, const std::string& dest, const Kernel& k, Backend backend){
+return true;
+}
+/**
+ * @brief 高斯滤波入口（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool gaussianFilter(){
+    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
+    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaGPU.png";
+    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
+    Kernel gaKernel = Kernel::gaussian(7,5.0f);
+    Image imgData = Image::imageLoadGray(srcPaht);
+    Image out(imgData.width,imgData.height);
+    imgData.imageSaveToGray(destPaht3);
+    //================CPU进行高斯计算=====================
+    auto t1 = std::chrono::high_resolution_clock::now();
+    gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height,gaKernel.data.data(),gaKernel.size);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
+    out.imageSaveToFile(destPaht1);
+    //================GPU进行高斯计算=====================
+    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,gaKernel.data.data(),gaKernel.size);
+    out.imageSaveToFile(destPaht2);
+    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
+    return true;
+}
+/**
+ * @brief Sobel 边缘检测（水平）（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool sobelXFilter(const std::string& src, const std::string& dest,Backend backend){
+return true;
+}
+/**
+ * @brief Sobel 边缘检测（垂直）（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool sobelYFilter(const std::string& src, const std::string& dest,Backend backend){
+return true;
+}
+/**
+ * @brief 锐化滤波器（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool sharpenFilter(const std::string& src, const std::string& dest,Backend backend){
+return true;
+}
+/**
+ * @brief 均值模糊滤波器（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool meanBlurFilter(const std::string& src, const std::string& dest,Backend backend){
+return true;
+}
+/**
+ * @brief 拉普拉斯算子（API）
+ * @param src 原图图像路径
+ * @param dest 保存图像路径
+ * @param backend 
+ * @return true 
+ * @return false 
+ */
+bool laplacianFilter(const std::string& src, const std::string& dest,Backend backend){
+return true;
+}
+
+
+} // gconv

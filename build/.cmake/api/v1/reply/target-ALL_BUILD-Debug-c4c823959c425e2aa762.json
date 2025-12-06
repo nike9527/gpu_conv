@@ -1,0 +1,57 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "gconv::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "SDL_uclibc::@70e5cff702900c793a45"
+		},
+		{
+			"id" : "SDL3_image-shared::@4710c284587a20bda050"
+		},
+		{
+			"id" : "SDL3_test::@70e5cff702900c793a45"
+		},
+		{
+			"id" : "image_viewer::@b16d87cff82be6e9441d"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "samples_cpu_vs_gpu::@fd003194bc69d7fb51e8"
+		},
+		{
+			"id" : "SDL3-shared::@70e5cff702900c793a45"
+		},
+		{
+			"id" : "SDL3-static::@70e5cff702900c793a45"
+		}
+	],
+	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,12 @@
+D:/C++/gpu_conv_lib_cmake/build/CMakeFiles/gconv.dir
+D:/C++/gpu_conv_lib_cmake/build/CMakeFiles/ALL_BUILD.dir
+D:/C++/gpu_conv_lib_cmake/build/CMakeFiles/ZERO_CHECK.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3/CMakeFiles/SDL3-shared.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3/CMakeFiles/SDL3-static.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3/CMakeFiles/SDL3_test.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3/CMakeFiles/SDL_uclibc.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3/CMakeFiles/ALL_BUILD.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3_image/CMakeFiles/SDL3_image-shared.dir
+D:/C++/gpu_conv_lib_cmake/build/external/SDL3_image/CMakeFiles/ALL_BUILD.dir
+D:/C++/gpu_conv_lib_cmake/build/utils/image_viewer/CMakeFiles/image_viewer.dir
+D:/C++/gpu_conv_lib_cmake/build/samples/CMakeFiles/samples_cpu_vs_gpu.dir

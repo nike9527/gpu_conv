@@ -1,0 +1,956 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "external/SDL3",
+					"jsonFile" : "directory-external.SDL3-Debug-c2b38aefe9a4f76e5613.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/SDL3",
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "external/SDL3_image",
+					"jsonFile" : "directory-external.SDL3_image-Debug-482035147244fc198d55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "external/SDL3_image",
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				},
+				{
+					"build" : "utils/image_viewer",
+					"jsonFile" : "directory-utils.image_viewer-Debug-b7cf5d28243e1e669340.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "utils/image_viewer",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "samples",
+					"jsonFile" : "directory-samples-Debug-026e8de27727d40e5852.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "samples",
+					"targetIndexes" : 
+					[
+						11
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "gpu_conv_lib",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "SDL3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL3_image",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Debug-c4c823959c425e2aa762.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@70e5cff702900c793a45",
+					"jsonFile" : "target-ALL_BUILD-Debug-bd2f9834b465b79e548e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@4710c284587a20bda050",
+					"jsonFile" : "target-ALL_BUILD-Debug-66c339af364adf9fea7e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-shared::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-shared-Debug-9224cd2d1e5a7330495d.json",
+					"name" : "SDL3-shared",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-static::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-static-Debug-164802af34691e6a61f8.json",
+					"name" : "SDL3-static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3_image-shared::@4710c284587a20bda050",
+					"jsonFile" : "target-SDL3_image-shared-Debug-6942450ac17a645e3a98.json",
+					"name" : "SDL3_image-shared",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3_test::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3_test-Debug-29aa459a5dd2540e0e2b.json",
+					"name" : "SDL3_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL_uclibc::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL_uclibc-Debug-2dd3552cba06b5798a05.json",
+					"name" : "SDL_uclibc",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Debug-b39043923947b0b17c98.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gconv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gconv-Debug-9be3b0d3cd1654a16a6d.json",
+					"name" : "gconv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "image_viewer::@b16d87cff82be6e9441d",
+					"jsonFile" : "target-image_viewer-Debug-aed4efe2786946350b87.json",
+					"name" : "image_viewer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "samples_cpu_vs_gpu::@fd003194bc69d7fb51e8",
+					"jsonFile" : "target-samples_cpu_vs_gpu-Debug-cfb9df9e6f5d593407af.json",
+					"name" : "samples_cpu_vs_gpu",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "external/SDL3",
+					"jsonFile" : "directory-external.SDL3-Release-c2b38aefe9a4f76e5613.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/SDL3",
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "external/SDL3_image",
+					"jsonFile" : "directory-external.SDL3_image-Release-482035147244fc198d55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "external/SDL3_image",
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				},
+				{
+					"build" : "utils/image_viewer",
+					"jsonFile" : "directory-utils.image_viewer-Release-b7cf5d28243e1e669340.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "utils/image_viewer",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "samples",
+					"jsonFile" : "directory-samples-Release-026e8de27727d40e5852.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "samples",
+					"targetIndexes" : 
+					[
+						11
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "gpu_conv_lib",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "SDL3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL3_image",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Release-c4c823959c425e2aa762.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@70e5cff702900c793a45",
+					"jsonFile" : "target-ALL_BUILD-Release-bd2f9834b465b79e548e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@4710c284587a20bda050",
+					"jsonFile" : "target-ALL_BUILD-Release-66c339af364adf9fea7e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-shared::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-shared-Release-1939c221bd3e93d9c905.json",
+					"name" : "SDL3-shared",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-static::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-static-Release-8844e8f371a2aa37a4c5.json",
+					"name" : "SDL3-static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3_image-shared::@4710c284587a20bda050",
+					"jsonFile" : "target-SDL3_image-shared-Release-f7b15471eac6966aa378.json",
+					"name" : "SDL3_image-shared",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3_test::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3_test-Release-053224711aa9f098e223.json",
+					"name" : "SDL3_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL_uclibc::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL_uclibc-Release-0a0b79290ef09d15886c.json",
+					"name" : "SDL_uclibc",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Release-b39043923947b0b17c98.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gconv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gconv-Release-2fb6c2f6da0b794fc002.json",
+					"name" : "gconv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "image_viewer::@b16d87cff82be6e9441d",
+					"jsonFile" : "target-image_viewer-Release-65f7e4dbc9c7ef57ac2e.json",
+					"name" : "image_viewer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "samples_cpu_vs_gpu::@fd003194bc69d7fb51e8",
+					"jsonFile" : "target-samples_cpu_vs_gpu-Release-d2c395877e1f53d797df.json",
+					"name" : "samples_cpu_vs_gpu",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-.-MinSizeRel-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "external/SDL3",
+					"jsonFile" : "directory-external.SDL3-MinSizeRel-c2b38aefe9a4f76e5613.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/SDL3",
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "external/SDL3_image",
+					"jsonFile" : "directory-external.SDL3_image-MinSizeRel-482035147244fc198d55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "external/SDL3_image",
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				},
+				{
+					"build" : "utils/image_viewer",
+					"jsonFile" : "directory-utils.image_viewer-MinSizeRel-b7cf5d28243e1e669340.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "utils/image_viewer",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "samples",
+					"jsonFile" : "directory-samples-MinSizeRel-026e8de27727d40e5852.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "samples",
+					"targetIndexes" : 
+					[
+						11
+					]
+				}
+			],
+			"name" : "MinSizeRel",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "gpu_conv_lib",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "SDL3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL3_image",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-c4c823959c425e2aa762.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@70e5cff702900c793a45",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-bd2f9834b465b79e548e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@4710c284587a20bda050",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-66c339af364adf9fea7e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-shared::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-shared-MinSizeRel-1c60ed4f39af60a4d961.json",
+					"name" : "SDL3-shared",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-static::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-static-MinSizeRel-633dfbfc6a6745a9d879.json",
+					"name" : "SDL3-static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3_image-shared::@4710c284587a20bda050",
+					"jsonFile" : "target-SDL3_image-shared-MinSizeRel-b13b60563cbda0b9bde0.json",
+					"name" : "SDL3_image-shared",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3_test::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3_test-MinSizeRel-6e8a008d53b241386e50.json",
+					"name" : "SDL3_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL_uclibc::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL_uclibc-MinSizeRel-d6cafbf1d953e9497ea6.json",
+					"name" : "SDL_uclibc",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-MinSizeRel-b39043923947b0b17c98.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gconv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gconv-MinSizeRel-583fd72c553666e47995.json",
+					"name" : "gconv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "image_viewer::@b16d87cff82be6e9441d",
+					"jsonFile" : "target-image_viewer-MinSizeRel-d301b69325ad9e3ffd61.json",
+					"name" : "image_viewer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "samples_cpu_vs_gpu::@fd003194bc69d7fb51e8",
+					"jsonFile" : "target-samples_cpu_vs_gpu-MinSizeRel-9fb9a9bf683c67fcc45d.json",
+					"name" : "samples_cpu_vs_gpu",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-.-RelWithDebInfo-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "external/SDL3",
+					"jsonFile" : "directory-external.SDL3-RelWithDebInfo-c2b38aefe9a4f76e5613.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/SDL3",
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "external/SDL3_image",
+					"jsonFile" : "directory-external.SDL3_image-RelWithDebInfo-482035147244fc198d55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "external/SDL3_image",
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				},
+				{
+					"build" : "utils/image_viewer",
+					"jsonFile" : "directory-utils.image_viewer-RelWithDebInfo-b7cf5d28243e1e669340.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "utils/image_viewer",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "samples",
+					"jsonFile" : "directory-samples-RelWithDebInfo-026e8de27727d40e5852.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "samples",
+					"targetIndexes" : 
+					[
+						11
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "gpu_conv_lib",
+					"targetIndexes" : 
+					[
+						0,
+						8,
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "SDL3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						3,
+						4,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL3_image",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-c4c823959c425e2aa762.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@70e5cff702900c793a45",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-bd2f9834b465b79e548e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@4710c284587a20bda050",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-66c339af364adf9fea7e.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-shared::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-shared-RelWithDebInfo-6ba63da3d4ed322889d6.json",
+					"name" : "SDL3-shared",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3-static::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3-static-RelWithDebInfo-420f4ba20ab606ad8a22.json",
+					"name" : "SDL3-static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3_image-shared::@4710c284587a20bda050",
+					"jsonFile" : "target-SDL3_image-shared-RelWithDebInfo-45d088fc4b4d118dd8c5.json",
+					"name" : "SDL3_image-shared",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL3_test::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL3_test-RelWithDebInfo-ec5634e71cfff4aeb90d.json",
+					"name" : "SDL3_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SDL_uclibc::@70e5cff702900c793a45",
+					"jsonFile" : "target-SDL_uclibc-RelWithDebInfo-f30293bb34b370529c5c.json",
+					"name" : "SDL_uclibc",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-RelWithDebInfo-b39043923947b0b17c98.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gconv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gconv-RelWithDebInfo-e272b6ad701b8def62c0.json",
+					"name" : "gconv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "image_viewer::@b16d87cff82be6e9441d",
+					"jsonFile" : "target-image_viewer-RelWithDebInfo-157296a06bebe21fb39e.json",
+					"name" : "image_viewer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "samples_cpu_vs_gpu::@fd003194bc69d7fb51e8",
+					"jsonFile" : "target-samples_cpu_vs_gpu-RelWithDebInfo-d51c4bc9182fb72389d7.json",
+					"name" : "samples_cpu_vs_gpu",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/C++/gpu_conv_lib_cmake/build",
+		"source" : "D:/C++/gpu_conv_lib_cmake"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
