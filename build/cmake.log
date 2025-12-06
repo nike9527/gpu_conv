@@ -1,3 +1,0 @@
-CMake Error: Error: generator : Visual Studio 16 2019
-Does not match the generator used previously: Visual Studio 17 2022
-Either remove the CMakeCache.txt file and CMakeFiles directory or choose a different binary directory.
