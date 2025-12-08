@@ -4,3 +4,5 @@ __global__ void conv2d_global_kernel(const float* input, float* output, const in
 __global__ void gaussianConvolution(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * const kernel, const int kSize);
 
 __global__ void sobelConvolution(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * const kernelX, const float * const kernelY, const int kSize);
+
+__global__ void sharpenConvolution(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * kernel, const int ksize);

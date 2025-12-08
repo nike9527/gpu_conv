@@ -15,7 +15,7 @@
  * @param kernel 内核
  * @param kSize  核大小
  */
-void conv2d_cpu_omp(const float* in, float* out, const int w, const int h, const float const * kernel, int const ksize) {
+void conv2d_cpu_omp(const float* in, float* out, const int w, const int h, const float * const kernel, int const ksize) {
     int r = ksize / 2;
     #pragma omp parallel for
     for (int y = 0; y < h; y++) {
@@ -107,6 +107,39 @@ void sobelConvolution(const float* in, float* out, const int w, const int h,cons
                 }
             }
             out[y * w + x] = ::sqrt(gx * gx + gy * gy);
+        }
+    }
+}
+
+/**
+ * @brief  锐化滤波器
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ */
+void sharpenConvolution(const float* in, float* out, const int w, const int h){
+    Kernel kernel = Kernel::sharpen();
+    int kSize = kernel.size;
+    int radius = kSize / 2;
+    #pragma omp parallel for
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            float sum = 0.0f;
+            for (int ky = -radius; ky <= radius; ++ky) {
+                // 使用镜像边界
+                int iy = y + ky;
+                if (iy < 0) iy = -iy - 1; 
+                else if (iy >= h) iy = 2 * h - iy - 1;
+                for (int kx = -radius; kx <= radius; ++kx) {
+                    // 使用镜像边界
+                    int ix = x + kx;
+                    if (ix < 0)  ix = -ix - 1;
+                    else if (ix >= w) ix = 2*w - ix - 1;
+                    sum += in[iy * w + ix] * kernel.kdata[(ky + radius) * kSize + (kx + radius)];
+                }
+            }
+            out[y * w + x] = sum;
         }
     }
 }

@@ -9,6 +9,6 @@
 #include <string>
 
 int main(int argc, char* argv[]) {
-    gconv::sobelFilter();
+    gconv::sharpenFilter();
     return 0;
 }

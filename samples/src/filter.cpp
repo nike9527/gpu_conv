@@ -24,9 +24,6 @@ return true;
 }
 /**
  * @brief 高斯滤波入口（API）
- * @param src 原图图像路径
- * @param dest 保存图像路径
- * @param backend 
  * @return true 
  * @return false 
  */
@@ -50,7 +47,11 @@ bool gaussianFilter(){
     renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
     return true;
 }
-
+/**
+ * @brief Sobel 边缘检测
+ * @return true 
+ * @return false 
+ */
 bool sobelFilter(){
     std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
     std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
@@ -100,8 +101,25 @@ return true;
  * @return true 
  * @return false 
  */
-bool sharpenFilter(const std::string& src, const std::string& dest,Backend backend){
-return true;
+bool sharpenFilter(){
+    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
+    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaGPU.png";
+    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
+    Image imgData = Image::imageLoadGray(srcPaht);
+    Image out(imgData.width,imgData.height);
+    imgData.imageSaveToGray(destPaht3);
+    //================CPU进行锐化计算=====================
+    auto t1 = std::chrono::high_resolution_clock::now();
+    sharpenConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
+    out.imageSaveToFile(destPaht1);
+    //================GPU进行锐化计算=====================
+    sharpenConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height);
+    out.imageSaveToFile(destPaht2);
+    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
+    return true;
 }
 /**
  * @brief 均值模糊滤波器（API）

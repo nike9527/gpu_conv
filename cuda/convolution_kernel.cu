@@ -73,3 +73,27 @@ __global__ void sobelConvolution(const float* __restrict__ input, float* __restr
     }
     output[y * width + x] = ::sqrt(gx * gx + gy * gy);
 }
+
+__global__ void sharpenConvolution(const float* __restrict__ input, float* __restrict__ output, 
+    const int width, const int height, const float * kernel, const int kSize)
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    int radius = kSize / 2;
+    if (x >= width || y >= height) return;
+    float sum = 0.0f;
+    for (int ky = -radius; ky <= radius; ++ky) {
+        // 使用镜像边界
+        int iy = y + ky;
+        if (iy < 0) iy = -iy - 1; 
+        else if (iy >= height) iy = 2 * height - iy - 1;
+        for (int kx = -radius; kx <= radius; ++kx) {
+            // 使用镜像边界
+            int ix = x + kx;
+            if (ix < 0)  ix = -ix - 1;
+            else if (ix >= width) ix = 2*width - ix - 1;
+            sum += input[iy * width + ix] * kernel[(ky + radius) * kSize + (kx + radius)];
+        }
+    }
+    output[y * width + x] = sum;
+}

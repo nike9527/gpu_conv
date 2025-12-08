@@ -64,7 +64,7 @@ bool sobelYFilter(const std::string& src, const std::string& dest,Backend backen
  * @return true 
  * @return false 
  */
-bool sharpenFilter(const std::string& src, const std::string& dest,Backend backend = Backend::CPU_OMP);
+bool sharpenFilter();
 /**
  * @brief 均值模糊滤波器（API）
  * @param src 原图图像路径
