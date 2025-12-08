@@ -35,18 +35,37 @@ bool gaussianFilter(){
     std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
     std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaGPU.png";
     std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    Kernel gaKernel = Kernel::gaussian(7,5.0f);
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht3);
     //================CPU进行高斯计算=====================
     auto t1 = std::chrono::high_resolution_clock::now();
-    gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height,gaKernel.data.data(),gaKernel.size);
+    gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height, 7, 5.0f);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
     out.imageSaveToFile(destPaht1);
     //================GPU进行高斯计算=====================
-    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,gaKernel.data.data(),gaKernel.size);
+    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
+    out.imageSaveToFile(destPaht2);
+    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
+    return true;
+}
+
+bool sobelFilter(){
+    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
+    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaGPU.png";
+    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
+    Image imgData = Image::imageLoadGray(srcPaht);
+    Image out(imgData.width,imgData.height);
+    imgData.imageSaveToGray(destPaht3);
+    //================CPU进行高斯计算=====================
+    auto t1 = std::chrono::high_resolution_clock::now();
+    sobelConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height, 1, 1);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
+    //================GPU进行高斯计算=====================
+    sobelConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,1, 1);
     out.imageSaveToFile(destPaht2);
     renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
     return true;

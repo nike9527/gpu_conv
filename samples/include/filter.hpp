@@ -33,6 +33,12 @@ bool filter(const std::string& src, const std::string& dest, const Kernel& k, Ba
  */
 bool gaussianFilter();
 /**
+ * @brief Sobel 边缘检测
+ * @return true 
+ * @return false  
+ */
+bool sobelFilter();
+/**
  * @brief Sobel 边缘检测（水平）（API）
  * @param src 原图图像路径
  * @param dest 保存图像路径

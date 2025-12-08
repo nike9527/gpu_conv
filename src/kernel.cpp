@@ -6,7 +6,7 @@
  * @param size 
  * @param kdata 
  */
-Kernel::Kernel(int ksize, std::vector<float> kdata):size(ksize),data(kdata){}
+Kernel::Kernel(int ksize, std::vector<float> kdata):size(ksize),kdata(kdata){}
 
 Kernel Kernel::filterKernel(int ksize,std::vector<float> kdata){
   return Kernel(ksize*ksize,kdata);
@@ -28,13 +28,13 @@ Kernel Kernel::gaussian(int size, float sigma) {
     for (int y=-r;y<=r;y++){
         for (int x=-r;x<=r;x++){
             float v = expf(-(x*x+y*y)/(2*sigma*sigma));
-            k.data[(y+r)*size + (x+r)] = v;
+            k.kdata[(y+r)*size + (x+r)] = v;
             sum += v;
         }
     }
     #pragma omp parallel for
-    for (int i=0;i<k.data.size();i++){
-        k.data[i] /= sum;
+    for (int i=0;i<k.kdata.size();i++){
+        k.kdata[i] /= sum;
     }
     return k;
 }

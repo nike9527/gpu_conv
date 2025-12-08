@@ -13,7 +13,7 @@ private:
     Kernel(int ksize,std::vector<float> kdata);
 public: 
     int size = 3;   
-    std::vector<float> data;
+    std::vector<float> kdata;
     /**
      * @brief 自定义内核
      * @param ksize 核的大小

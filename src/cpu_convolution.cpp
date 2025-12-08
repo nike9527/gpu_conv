@@ -2,10 +2,20 @@
  * CPU baseline + OpenMP
  */
 #include "cpu_convolution.hpp"
+#include "kernel.hpp"
 #include <algorithm>
 #include <omp.h>
-
-void convolution(const float* in, float* out, int w, int h, const float* kernel, int ksize) {
+/**
+ * @brief 自自定义卷积
+ * 
+ * @param in  输入数据
+ * @param out   输出数据
+ * @param w  宽度
+ * @param h  高度
+ * @param kernel 内核
+ * @param kSize  核大小
+ */
+void conv2d_cpu_omp(const float* in, float* out, const int w, const int h, const float const * kernel, int const ksize) {
     int r = ksize / 2;
     #pragma omp parallel for
     for (int y = 0; y < h; y++) {
@@ -22,8 +32,16 @@ void convolution(const float* in, float* out, int w, int h, const float* kernel,
         }
     }
 }
-
-void gaussianConvolution(const float* in, float* out, int w, int h, const float* kernel, int kSize){
+/**
+ * @brief 高斯卷积
+ * @param in  输入数据
+ * @param out   输出数据
+ * @param w  宽度
+ * @param h  高度
+ * @param kSize  核大小
+ */
+void gaussianConvolution(const float* in, float* out, const int w, const int h, const int kSize, const float sigma){
+    Kernel kernel = Kernel::gaussian(kSize,sigma);
     int radius = kSize / 2;
     #pragma omp parallel for
     for (int y = 0; y < h; ++y) {
@@ -45,11 +63,50 @@ void gaussianConvolution(const float* in, float* out, int w, int h, const float*
                     // else if (ix >= w) ix = w - 1;
                     if (ix < 0)  ix = -ix - 1;
                     else if (ix >= w) ix = 2*w - ix - 1;
-                    sum += in[iy * w + ix] * kernel[(ky + radius) * kSize + (kx + radius)];
+                    sum += in[iy * w + ix] * kernel.kdata[(ky + radius) * kSize + (kx + radius)];
                 }
             }
             out[y * w + x] = sum;
         }
     }
 }
+/**
+ * @brief sobel卷积
+ * @param in  输入数据
+ * @param out   输出数据
+ * @param w  宽度
+ * @param h  高度
+ * @param dx x方向卷积
+ * @param dy y方向卷积
+ */
+void sobelConvolution(const float* in, float* out, const int w, const int h,const int dx, const int dy)
+{
+    Kernel kernelX = Kernel::sobelX();
+    Kernel kernelY = Kernel::sobelY();
+    int kSize = kernelX.size;
+    int radius = kernelX.size /  2;
+    #pragma omp parallel for
+    for (int y = 0; y < h; ++y){
+        for (int x = 0; x < w; ++x){
+            float gx = 0, gy = 0;
+            for (int ky = -radius; ky <= radius; ++ky){
+                //使用镜像边界
+                int iy = y + ky;
+                if (iy < 0) iy = -iy - 1;
+                else if (iy >= h) iy = 2 * h - iy - 1;
+                for (int kx = -radius; kx <= radius; ++kx){
+                    int ix = x + kx;
+                    if (ix < 0)  ix = -ix - 1;
+                    else if (ix >= w) ix = 2*w - ix - 1;
 
+                    float pixel = in[iy * w + ix];
+                    int kIndex = (ky + radius) * kSize + (kx + radius);
+
+                    gx += (dx ? pixel * kernelX.kdata[kIndex] : 0);
+                    gy += (dy ? pixel * kernelY.kdata[kIndex] : 0);
+                }
+            }
+            out[y * w + x] = ::sqrt(gx * gx + gy * gy);
+        }
+    }
+}
