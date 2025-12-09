@@ -55,6 +55,6 @@ bool Image::imageSaveToGray(const std::string& path){
     imageSaveToFile(path);
     return true;
 }
- bool Image::imageSplit(const std::string& path){
+bool Image::imageSplit(const std::string& path){
     return true;
  }

@@ -143,3 +143,62 @@ void sharpenConvolution(const float* in, float* out, const int w, const int h){
         }
     }
 }
+
+/**
+ * @brief  均值模糊
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ * @param kSize  核大小
+ */
+void meanBlurConvolution(const float* in, float* out, const int w, const int h,int const kSize){
+    Kernel kernel = Kernel::meanBlur(kSize);
+    int radius = kSize / 2;
+    #pragma omp parallel for
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            float sum = 0.0f;
+            for (int ky = -radius; ky <= radius; ++ky) {
+                // 使用镜像边界
+                int iy = y + ky;
+                if (iy < 0) iy = -iy - 1; 
+                else if (iy >= h) iy = 2 * h - iy - 1;
+                for (int kx = -radius; kx <= radius; ++kx) {
+                    // 使用镜像边界
+                    int ix = x + kx;
+                    if (ix < 0)  ix = -ix - 1;
+                    else if (ix >= w) ix = 2*w - ix - 1;
+                    sum += in[iy * w + ix] * kernel.kdata[(ky + radius) * kSize + (kx + radius)];
+                }
+            }
+            out[y * w + x] = sum;
+        }
+    }
+}
+
+void laplacianConvolution(const float* in, float* out, const int w, const int h){
+    Kernel kernel = Kernel::laplacian();
+    int kSize = kernel.size;
+    int radius = kSize / 2;
+    #pragma omp parallel for
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            float sum = 0.0f;
+            for (int ky = -radius; ky <= radius; ++ky) {
+                // 使用镜像边界
+                int iy = y + ky;
+                if (iy < 0) iy = -iy - 1; 
+                else if (iy >= h) iy = 2 * h - iy - 1;
+                for (int kx = -radius; kx <= radius; ++kx) {
+                    // 使用镜像边界
+                    int ix = x + kx;
+                    if (ix < 0)  ix = -ix - 1;
+                    else if (ix >= w) ix = 2*w - ix - 1;
+                    sum += in[iy * w + ix] * kernel.kdata[(ky + radius) * kSize + (kx + radius)];
+                }
+            }
+            out[y * w + x] = sum;
+        }
+    }
+}

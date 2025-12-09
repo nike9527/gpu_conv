@@ -37,8 +37,9 @@ add_library(gconv STATIC
     src/cpu_convolution.cpp
     src/image.cpp
     src/kernel.cpp
-    cuda/gpu_convolution.cu #优化
-    cuda/convolution_kernel.cu#优化
+    cuda/gpu_convolution.cu
+    cuda/convolution_kernel.cu
+    #cuda/convolution_shared.cu
 )
 target_include_directories(gconv PUBLIC include)
 target_link_libraries(gconv PUBLIC CUDA::cudart)

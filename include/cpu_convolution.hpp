@@ -39,3 +39,22 @@ void sobelConvolution(const float* in, float* out, const int w, const int h,cons
  * @param h   宽度
  */
 void sharpenConvolution(const float* in, float* out, const int w, const int h);
+
+/**
+ * @brief 均值模糊
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ * @param ksize 内核大小
+ */
+void meanBlurConvolution(const float* in, float* out, const int w, const int h,int const ksize);
+
+/**
+ * @brief 拉普拉斯算子
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ */
+void laplacianConvolution(const float* in, float* out, const int w, const int h);

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @brief 高斯卷积
  * @param in  输入数据
  * @param out 输入数据
@@ -26,3 +26,23 @@ extern void sobelConvolutionGPU(const float* in, float* out, const int w, const 
  * @param h   宽度
  */
 extern void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h);
+
+
+/**
+ * @brief 均值模糊
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ * @param ksize 内核大小
+ */
+extern void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int h,int const kSize);
+
+/**
+ * @brief 拉普拉斯算子
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ */
+extern void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h);

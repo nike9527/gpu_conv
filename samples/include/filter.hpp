@@ -73,7 +73,7 @@ bool sharpenFilter();
  * @return true 
  * @return false 
  */
-bool meanBlurFilter(const std::string& src, const std::string& dest,Backend backend = Backend::CPU_OMP);
+bool meanBlurFilter();
 /**
  * @brief 拉普拉斯算子（API）
  * @param src 原图图像路径
@@ -82,5 +82,5 @@ bool meanBlurFilter(const std::string& src, const std::string& dest,Backend back
  * @return true 
  * @return false 
  */
-bool laplacianFilter(const std::string& src, const std::string& dest,Backend backend = Backend::CPU_OMP);
+bool laplacianFilter();
 }
