@@ -1,8 +1,8 @@
 ﻿/**
  * 卷积统一入口（对外 API）
  */
-#include "gpu_convolution.hpp"
-#include "cpu_convolution.hpp"
+#include "convolution_gpu.hpp"
+#include "convolution_cpu.hpp"
 #include "kernel.hpp"
 #include "filter.hpp"
 #include "image_viewer.hpp"
@@ -29,22 +29,27 @@ return true;
  */
 bool gaussianFilter(){
     std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaGPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
+    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
-    imgData.imageSaveToGray(destPaht3);
+    imgData.imageSaveToGray(destPaht1);
     //================CPU进行高斯计算=====================
     auto t1 = std::chrono::high_resolution_clock::now();
     gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height, 7, 5.0f);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
-    out.imageSaveToFile(destPaht1);
-    //================GPU进行高斯计算=====================
-    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
     out.imageSaveToFile(destPaht2);
-    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
+    //================GPU进行高斯计算-全局内存=====================
+    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
+    out.imageSaveToFile(destPaht3);
+    //================GPU进行高斯计算-共享内存=====================
+    gaussianConvolutionWithSharedGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
+    out.imageSaveToFile(destPaht4);
+    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3,destPaht4},imgData.width,imgData.height);
     return true;
 }
 /**

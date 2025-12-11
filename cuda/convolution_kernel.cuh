@@ -1,4 +1,5 @@
 ﻿
+//=============================全局内存=======================================
 /**
  * @brief 自定义卷积
  * @param input 输入数据
@@ -9,7 +10,7 @@
  * @param ksize 内核大小
  * @return __global__ 
  */
- __global__ void conv2d_global_kernel(const float* input, float* output, const int width, const int height, const float * kernel, const int kSize);
+__global__ void conv2d_global_kernel(const float* input, float* output, const int width, const int height, const float * kernel, const int kSize);
 
  /**
   * @brief 高斯模糊
@@ -67,6 +68,7 @@ __global__ void meanBlurConvolution(const float* __restrict__ input, float* __re
  */
 __global__ void laplacianConvolution(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * kernel, const int kSize);
 
+//=============================共享内存+常量内核=======================================
 /**
  * @brief 自定义卷积
  * @param input 输入数据
@@ -77,7 +79,7 @@ __global__ void laplacianConvolution(const float* __restrict__ input, float* __r
  * @param ksize 内核大小
  * @return __global__ 
  */
-__global__ void conv2d_global_kernelWithShared(const float* input, float* output, const int width, const int height, const float * kernel, const int kSize);
+__global__ void conv2d_global_kernelWithShared(const float* input, float* output, const int width, const int height, const int kSize);
  /**
   * @brief 高斯模糊
   * @param input 输入数据
@@ -88,7 +90,7 @@ __global__ void conv2d_global_kernelWithShared(const float* input, float* output
   * @param ksize 内核大小
   * @return __global__ 
   */
-__global__ void gaussianConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * const kernel, const int kSize);
+__global__ void gaussianConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const int kSize);
 /**
  * @brief sobel算子
  * @param input 输入数据
@@ -112,7 +114,7 @@ __global__ void sobelConvolutionWithShared(const float* __restrict__ input, floa
  * @param kernel 内核
  * @param ksize 内核大小
  */
-__global__ void sharpenConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * kernel, const int kSize);
+__global__ void sharpenConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const int kSize);
 /**
  * @brief 均值模糊
  * @param input 输入数据
@@ -122,7 +124,7 @@ __global__ void sharpenConvolutionWithShared(const float* __restrict__ input, fl
  * @param kernel 内核
  * @param ksize 内核大小
  */
-__global__ void meanBlurConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * kernel, const int kSize);
+__global__ void meanBlurConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const int kSize);
 /**
  * @brief 拉普拉斯算子
  * @param input 输入数据
@@ -132,4 +134,4 @@ __global__ void meanBlurConvolutionWithShared(const float* __restrict__ input, f
  * @param kernel 内核
  * @param ksize 内核大小
  */
-__global__ void laplacianConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * kernel, const int kSize);
+__global__ void laplacianConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const int kSize);

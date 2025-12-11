@@ -12,7 +12,8 @@ private:
      */
     Kernel(int ksize,std::vector<float> kdata);
 public: 
-    int size = 3;   
+    int size = 3;
+    bool isConMen = true;
     std::vector<float> kdata;
     /**
      * @brief 自定义内核

@@ -1,7 +1,7 @@
 ﻿/**
  * CPU baseline + OpenMP
  */
-#include "cpu_convolution.hpp"
+#include "convolution_cpu.hpp"
 #include "kernel.hpp"
 #include <algorithm>
 #include <omp.h>
@@ -176,7 +176,13 @@ void meanBlurConvolution(const float* in, float* out, const int w, const int h,i
         }
     }
 }
-
+/**
+ * @brief 拉普拉斯算子
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ */
 void laplacianConvolution(const float* in, float* out, const int w, const int h){
     Kernel kernel = Kernel::laplacian();
     int kSize = kernel.size;
