@@ -39,7 +39,7 @@ add_library(gconv STATIC
     src/image.cpp
     src/kernel.cpp
     cuda/convolution_gpu.cu
-    cuda/convolution_kernel.cu
+    cuda/convolution_global.cu
     cuda/convolution_shared.cu
 )
 set_target_properties(gconv PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)

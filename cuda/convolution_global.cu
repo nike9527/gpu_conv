@@ -1,4 +1,9 @@
-﻿#include <cuda_runtime.h>
+﻿
+/**
+ * @brief 是对convolution_kernel.cuh的文件函数实现
+ */
+//=========================================全局内存===============================================
+#include <cuda_runtime.h>
 /**
  * @brief 自定义卷积
  * @param input 输入数据
@@ -6,19 +11,19 @@
  * @param width 宽度
  * @param height 高度
  * @param kernel 内核
- * @param ksize 内核大小
+ * @param kSize 内核大小
  */
-__global__ void conv2d_global_kernel(const float* input, float* output, const int width, const int height, const float* const kernel, const int ksize){
+__global__ void conv2dGlobalKernel(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float* const kernel, const int kSize){
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     if (x >= width || y >= height) return;
-    int r = ksize / 2;
+    int radius = kSize / 2;
     float sum = 0.0f;
-    for (int ky = -r; ky <= r; ky++) {
-        for (int kx = -r; kx <= r; kx++) {
+    for (int ky = -radius; ky <= radius; ky++) {
+        for (int kx = -radius; kx <= radius; kx++) {
             int ix = min(max(x + kx, 0), width - 1);
             int iy = min(max(y + ky, 0), height - 1);
-            sum += input[iy * width + ix] * kernel[(ky + r) * ksize + (kx + r)];
+            sum +=  input[iy * width + ix] * kernel[(ky + radius) * kSize + (kx + radius)];
         }
     }
     output[y * width + x] = sum;

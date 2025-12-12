@@ -1,5 +1,15 @@
 ﻿//=============================全局内存=======================================
 /**
+ * @brief 自定义卷积
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ * @param kSize 核大小
+ * @param kernel 核
+ */
+extern void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel);
+/**
  * @brief 高斯卷积
  * @param in  输入数据
  * @param out 输入数据
@@ -46,6 +56,16 @@ extern void meanBlurConvolutionGPU(const float* in, float* out, const int w, con
  */
 extern void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h);
 //=============================共享内存+常量内存=======================================
+/**
+ * @brief 自定义卷积
+ * @param in  输入数据
+ * @param out 输入数据
+ * @param w   高度  
+ * @param h   宽度
+ * @param kSize 核大小
+ * @param kernel 核
+ */
+extern void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel);
 /**
  * @brief 高斯卷积
  * @param in  输入数据

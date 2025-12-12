@@ -1,4 +1,4 @@
-﻿void conv2d_cpu_omp(const float* in, float* out, const int w, const int h, const float* kernel, const int ksize);
+﻿void conv2dCpuOmp(const float* in, float* out, const int w, const int h, const int ksize, const float* kernel);
 /**
  * @brief 高斯卷积
  * @param in  输入数据

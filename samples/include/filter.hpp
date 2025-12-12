@@ -10,9 +10,6 @@ enum class Backend {
     CPU_OMP,
     GPU_GLOBAL
 };
-
-bool convolve(const Image& src, Image& dst, const Kernel& k, Backend backend);
-
 /**
  * @brief 自定义卷积函数
  * @param src 原图图像路径
@@ -22,7 +19,8 @@ bool convolve(const Image& src, Image& dst, const Kernel& k, Backend backend);
  * @return true 
  * @return false 
  */
-bool filter(const std::string& src, const std::string& dest, const Kernel& k, Backend backend = Backend::CPU_OMP);
+bool convolve();
+
 /**
  * @brief 高斯滤波入口（API）
  * @param src 原图图像路径

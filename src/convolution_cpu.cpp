@@ -15,7 +15,7 @@
  * @param kernel 内核
  * @param kSize  核大小
  */
-void conv2d_cpu_omp(const float* in, float* out, const int w, const int h, const float * const kernel, int const ksize) {
+void conv2dCpuOmp(const float* in, float* out, const int w, const int h,  const int ksize,const float* kernel){
     int r = ksize / 2;
     #pragma omp parallel for
     for (int y = 0; y < h; y++) {
