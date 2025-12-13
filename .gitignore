@@ -4,3 +4,5 @@ lib/
 bin/
 image/
 gitCode_token.txt
+*.xlsx
+*.xls
