@@ -8,7 +8,7 @@
  * @param kSize 核大小
  * @param kernel 核
  */
-extern void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel);
+extern void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel, int block_w = 16, int block_h = 16);
 /**
  * @brief 高斯卷积
  * @param in  输入数据
@@ -18,7 +18,7 @@ extern void conv2dGlobalGPU(const float* in, float* out, const int w, const int 
  * @param sigma 
  * @param kSize 积核大小
  */
-extern void gaussianConvolutionGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma);
+extern void gaussianConvolutionGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma, int block_w = 16, int block_h = 16);
 /**
  * @brief sobel卷积
  * @param in  输入数据
@@ -28,7 +28,7 @@ extern void gaussianConvolutionGPU(const float* in, float* out, const int w, con
  * @param dx x方向卷积 0不做处理
  * @param dy y方向卷积 0不做处理
  * */
-extern void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy);
+extern void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy, int block_w = 16, int block_h = 16);
 /**
  * @brief 锐化滤波器
  * @param in  输入数据
@@ -36,7 +36,7 @@ extern void sobelConvolutionGPU(const float* in, float* out, const int w, const 
  * @param w   高度  
  * @param h   宽度
  */
-extern void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h);
+extern void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);
 /**
  * @brief 均值模糊
  * @param in  输入数据
@@ -45,8 +45,7 @@ extern void sharpenConvolutionGPU(const float* in, float* out, const int w, cons
  * @param h   宽度
  * @param ksize 内核大小
  */
-extern void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int h,int const kSize);
-
+extern void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int h,int const kSize, int block_w = 16, int block_h = 16);
 /**
  * @brief 拉普拉斯算子
  * @param in  输入数据
@@ -54,7 +53,7 @@ extern void meanBlurConvolutionGPU(const float* in, float* out, const int w, con
  * @param w   高度  
  * @param h   宽度
  */
-extern void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h);
+extern void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);
 //=============================共享内存+常量内存=======================================
 /**
  * @brief 自定义卷积
@@ -65,7 +64,7 @@ extern void laplacianConvolutionGPU(const float* in, float* out, const int w, co
  * @param kSize 核大小
  * @param kernel 核
  */
-extern void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel);
+extern void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kerne, int block_w = 16, int block_h = 16);
 /**
  * @brief 高斯卷积
  * @param in  输入数据
@@ -75,7 +74,7 @@ extern void conv2dWithSharedGPU(const float* in, float* out, const int w, const 
  * @param sigma 
  * @param kSize 积核大小
  */
-extern void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma);
+extern void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma, int block_w = 16, int block_h = 16);
 /**
  * @brief sobel卷积
  * @param in  输入数据
@@ -85,7 +84,7 @@ extern void gaussianConvolutionWithSharedGPU(const float* in, float* out, const 
  * @param dx x方向卷积 0不做处理
  * @param dy y方向卷积 0不做处理
  * */
-extern void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy);
+extern void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy, int block_w = 16, int block_h = 16);
 /**
  * @brief 锐化滤波器
  * @param in  输入数据
@@ -93,7 +92,7 @@ extern void sobelConvolutionWithSharedGPU(const float* in, float* out, const int
  * @param w   高度  
  * @param h   宽度
  */
-extern void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h);
+extern void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);
 /**
  * @brief 均值模糊
  * @param in  输入数据
@@ -102,8 +101,7 @@ extern void sharpenConvolutionWithSharedGPU(const float* in, float* out, const i
  * @param h   宽度
  * @param ksize 内核大小
  */
-extern void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int const kSize);
-
+extern void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int const kSize, int block_w = 16, int block_h = 16);
 /**
  * @brief 拉普拉斯算子
  * @param in  输入数据
@@ -111,4 +109,4 @@ extern void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const 
  * @param w   高度  
  * @param h   宽度
  */
-extern void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h);
+extern void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);

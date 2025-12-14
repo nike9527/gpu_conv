@@ -10,7 +10,8 @@
 // 卷积核放入常量内存（最快）
 __constant__ float constkernel[4096]; // 最大支持7x7卷积核
 //=============================全局内存=======================================
-void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel){
+
+void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernel=nullptr;
     cudaError_t err;
@@ -45,7 +46,7 @@ void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, cons
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     conv2dGlobalKernel<<<grid, block>>>(d_in, d_out, w, h, d_kernel, kSize);
@@ -73,7 +74,7 @@ void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, cons
     cudaFree(d_kernel);
     return;
 }
-void gaussianConvolutionGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma) {
+void gaussianConvolutionGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma,int block_w = 16, int block_h = 16) {
     Kernel gaKernel = Kernel::gaussian(kSize,sigma);
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernel=nullptr;
@@ -109,7 +110,7 @@ void gaussianConvolutionGPU(const float* in, float* out, const int w, const int 
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     gaussianConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernel, kSize);
@@ -137,8 +138,7 @@ void gaussianConvolutionGPU(const float* in, float* out, const int w, const int 
     cudaFree(d_kernel);
     return;
 }
-
-void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy){
+void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy,int block_w = 16, int block_h = 16){
    
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernelX=nullptr, *d_kernelY=nullptr;
@@ -197,7 +197,7 @@ void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,c
             return;
         }
     }
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     sobelConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernelX, d_kernelY, kSize);
@@ -227,8 +227,7 @@ void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,c
     cudaFree(d_kernelY);
     return;
 } 
-
-void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h){
+void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel sharpenKernel = Kernel::sharpen();
     int kSize = sharpenKernel.size;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
@@ -265,7 +264,7 @@ void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     sharpenConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernel, kSize);
@@ -292,8 +291,7 @@ void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h
     cudaFree(d_kernel);
     return;
 }
-
-void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int h,int const kSize){
+void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int h,int const kSize,int block_w = 16, int block_h = 16){
     Kernel meanKernel = Kernel::meanBlur(kSize);
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernel=nullptr;
@@ -329,7 +327,7 @@ void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int 
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     meanBlurConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernel, kSize);
@@ -356,8 +354,7 @@ void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int 
     cudaFree(d_kernel);
     return;
 }
-
-void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h){
+void laplacianConvolutionGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel laplacianKernel = Kernel::laplacian();
     int kSize = laplacianKernel.size;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
@@ -394,7 +391,7 @@ void laplacianConvolutionGPU(const float* in, float* out, const int w, const int
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     laplacianConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernel, kSize);
@@ -422,7 +419,7 @@ void laplacianConvolutionGPU(const float* in, float* out, const int w, const int
     return;
 }
 //=========================================共享内存+常量内存===============================================
-void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel){
+void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernel=nullptr;
     cudaError_t err;
@@ -457,7 +454,7 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
         cudaFree(d_kernel);
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     conv2dGlobalKernelWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
@@ -485,8 +482,7 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
     cudaFree(d_kernel);
     return;
 }
-
-void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma) {
+void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma,int block_w = 16, int block_h = 16) {
     Kernel gaKernel = Kernel::gaussian(kSize,sigma);
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
@@ -514,7 +510,7 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
         cudaFree(d_in); 
         cudaFree(d_out); 
     }
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     gaussianConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
@@ -539,8 +535,7 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     cudaFree(d_out); 
     return;
 }
-
-void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy){
+void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,const int dx, const int dy,int block_w = 16, int block_h = 16){
    
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr, *d_kernelX=nullptr, *d_kernelY=nullptr;
@@ -599,7 +594,7 @@ void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, con
             return;
         }
     }
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     sobelConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernelX, d_kernelY, kSize);
@@ -629,8 +624,7 @@ void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, con
     cudaFree(d_kernelY);
     return;
 } 
-
-void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h){
+void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel sharpenKernel = Kernel::sharpen();
     int kSize = sharpenKernel.size;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
@@ -660,7 +654,7 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
         cudaFree(d_out); 
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     sharpenConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
@@ -684,8 +678,7 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
     cudaFree(d_out); 
     return;
 }
-
-void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int const kSize){
+void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int const kSize,int block_w = 16, int block_h = 16){
     Kernel meanKernel = Kernel::meanBlur(kSize);
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
@@ -711,7 +704,7 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
         cudaFree(d_out); 
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     meanBlurConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
@@ -735,8 +728,7 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     cudaFree(d_out); 
     return;
 }
-
-void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h){
+void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel laplacianKernel = Kernel::laplacian();
     int kSize = laplacianKernel.size;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
@@ -764,7 +756,7 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
         cudaFree(d_out); 
     }
 
-    dim3 block(16,16);
+    dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
     auto t1 = std::chrono::high_resolution_clock::now();
     laplacianConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
