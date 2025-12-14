@@ -58,7 +58,7 @@ __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, f
                 const int width, const int height, const int kSize)
 {
     int radius = kSize / 2;
-    __shared__ float tile[18 * 18];
+    extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     // 计算共享内存大小（考虑边缘填充）
@@ -140,7 +140,7 @@ __global__ void sharpenConvolutionWithShared(const float* __restrict__ input, fl
     const int width, const int height, const int kSize)
 {
     int radius = kSize / 2;
-    __shared__ float tile[18 * 18];
+    extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     // 计算共享内存大小（考虑边缘填充）
@@ -179,7 +179,7 @@ __global__ void meanBlurConvolutionWithShared(const float* __restrict__ input, f
     const int width, const int height, const int kSize)
 {
     int radius = kSize / 2;
-    __shared__ float tile[18 * 18];
+    extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     // 计算共享内存大小（考虑边缘填充）
@@ -218,7 +218,7 @@ __global__ void laplacianConvolutionWithShared(const float* __restrict__ input, 
     const int width, const int height, const int kSize)
 {
     int radius = kSize / 2;
-    __shared__ float tile[18 * 18];
+    extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     // 计算共享内存大小（考虑边缘填充）

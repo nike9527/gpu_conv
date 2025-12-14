@@ -456,8 +456,9 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    conv2dGlobalKernelWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
+    conv2dGlobalKernelWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     cudaDeviceSynchronize();
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
@@ -512,8 +513,9 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     }
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    gaussianConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
+    gaussianConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     cudaDeviceSynchronize();
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
@@ -596,8 +598,9 @@ void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, con
     }
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    sobelConvolution<<<grid, block>>>(d_in, d_out, w, h, d_kernelX, d_kernelY, kSize);
+    sobelConvolution<<<grid, block, shraedSize>>>(d_in, d_out, w, h, d_kernelX, d_kernelY, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
     err = cudaGetLastError(); 
@@ -656,8 +659,9 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    sharpenConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
+    sharpenConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
     err = cudaGetLastError(); 
@@ -706,8 +710,9 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    meanBlurConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
+    meanBlurConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
     err = cudaGetLastError(); 
@@ -758,8 +763,9 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
     auto t1 = std::chrono::high_resolution_clock::now();
-    laplacianConvolutionWithShared<<<grid, block>>>(d_in, d_out, w, h, kSize);
+    laplacianConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
     err = cudaGetLastError(); 

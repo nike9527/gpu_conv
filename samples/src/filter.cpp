@@ -20,11 +20,11 @@ namespace gconv {
  * @return false 
  */
 bool convolve(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+    std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht1);
@@ -53,11 +53,11 @@ bool convolve(){
  * @return false 
  */
 bool gaussianFilter(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+    std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
 
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
@@ -83,11 +83,11 @@ bool gaussianFilter(){
  * @return false 
  */
 bool sobelFilter(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+     std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht1);
@@ -138,11 +138,11 @@ return true;
  * @return false 
  */
 bool sharpenFilter(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+    std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht1);
@@ -170,11 +170,11 @@ bool sharpenFilter(){
  * @return false 
  */
 bool meanBlurFilter(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+    std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht1);
@@ -202,11 +202,11 @@ bool meanBlurFilter(){
  * @return false 
  */
 bool laplacianFilter(){
-    std::string srcPaht="D:/C++/gpu_conv_lib_cmake/image/lena.png";
-    std::string destPaht1="D:/C++/gpu_conv_lib_cmake/image/lenaGary.png";
-    std::string destPaht2="D:/C++/gpu_conv_lib_cmake/image/lenaCPU.png";
-    std::string destPaht3="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_global.png";
-    std::string destPaht4="D:/C++/gpu_conv_lib_cmake/image/lenaGPU_shared.png";
+    std::string srcPaht="D:/C++/gpu_conv/image/lena.png";
+    std::string destPaht1="D:/C++/gpu_conv/image/lenaGary.png";
+    std::string destPaht2="D:/C++/gpu_conv/image/lenaCPU.png";
+    std::string destPaht3="D:/C++/gpu_conv/image/lenaGPU_global.png";
+    std::string destPaht4="D:/C++/gpu_conv/image/lenaGPU_shared.png";
     Image imgData = Image::imageLoadGray(srcPaht);
     Image out(imgData.width,imgData.height);
     imgData.imageSaveToGray(destPaht1);
