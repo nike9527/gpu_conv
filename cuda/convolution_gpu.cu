@@ -4,6 +4,9 @@
 #include <cuda_runtime.h>
 #include "kernel.hpp"
 #include "convolution_kernel.cuh"
+#include <vector>
+#include "image.hpp"
+#include "cuda_utils.cuh"
 /**
  * @brief 外部函数调用和函数的入口(api)
  */
@@ -421,7 +424,7 @@ void laplacianConvolutionGPU(const float* in, float* out, const int w, const int
 //=========================================共享内存+常量内存===============================================
 void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
     size_t n = size_t(w) * size_t(h) * sizeof(float);
-    float *d_in=nullptr, *d_out=nullptr, *d_kernel=nullptr;
+    float *d_in=nullptr, *d_out=nullptr;
     cudaError_t err;
     err = cudaMalloc(&d_in, n); if (err != cudaSuccess) { 
         std::cerr<<"cudaMalloc d_in failed\n"; 
@@ -431,27 +434,18 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
         cudaFree(d_in); std::cerr<<"cudaMalloc d_out failed\n"; 
         return; 
     }
-    err = cudaMalloc(&d_kernel, kSize*kSize*sizeof(float)); 
-    if (err != cudaSuccess) { 
-        cudaFree(d_in); 
-        cudaFree(d_out); 
-        std::cerr<<"cudaMalloc d_kernel failed\n"; 
-        return; 
-    }
 
     err = cudaMemcpy(d_in, in, n, cudaMemcpyHostToDevice);
     if (err != cudaSuccess) { 
         std::cerr<<"cudaMemcpy d_in failed\n"; 
         cudaFree(d_in); 
         cudaFree(d_out); 
-        cudaFree(d_kernel);
     }
-    err = cudaMemcpy(d_kernel, kernel, kSize*kSize*sizeof(float), cudaMemcpyHostToDevice);
+    err = cudaMemcpyToSymbol(constkernel, kernel, kSize*kSize*sizeof(float), 0, cudaMemcpyHostToDevice);
     if (err != cudaSuccess) { 
         std::cerr<<"cudaMemcpy d_kernel failed\n"; 
         cudaFree(d_in); 
         cudaFree(d_out); 
-        cudaFree(d_kernel);
     }
 
     dim3 block(block_w,block_h);
@@ -467,7 +461,6 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
         std::cerr<<"kernel launch failed: "<<cudaGetErrorString(err)<<"\n"; 
         cudaFree(d_in); 
         cudaFree(d_out); 
-        cudaFree(d_kernel);
     }
 
     err = cudaMemcpy(out, d_out, n, cudaMemcpyDeviceToHost);
@@ -475,12 +468,10 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
         std::cerr<<"cudaMemcpy d_out failed\n";
         cudaFree(d_in); 
         cudaFree(d_out); 
-        cudaFree(d_kernel);
     }
 
     cudaFree(d_in); 
     cudaFree(d_out); 
-    cudaFree(d_kernel);
     return;
 }
 void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float sigma,int block_w = 16, int block_h = 16) {
@@ -787,4 +778,32 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
     return;
 }
 
-
+//=========================================cuda stream===============================================
+void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
+    cudaMemcpyToSymbol(constkernel, kernel, kSize*kSize*sizeof(float), 0, cudaMemcpyHostToDevice);
+    bufferStream buffs[NUM_BUFFERS];
+    int size = 3840 * 2160 * sizeof(float);
+    initializeDeviceMemory(buffs,size);
+    for (int i = 0; i < in.size(); ++i){
+        int cur = i % NUM_BUFFERS;
+        bufferStream& buf = buffs[cur];
+        if (i >= NUM_BUFFERS) {
+            cudaEventSynchronize(buf.e);
+        }
+        cudaMemcpyAsync(buf.d_in,in[i].data.data(),in[i].width * in[i].height * sizeof(float),cudaMemcpyHostToDevice,buf.stream);
+        dim3 block(block_w,block_h);
+        dim3 grid((in[i].width+block.x-1)/block.x, (in[i].height+block.y-1)/block.y);
+        int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2));
+        auto t1 = std::chrono::high_resolution_clock::now();
+        conv2dGlobalKernelWithShared<<<grid, block, shraedSize, buf.stream>>>(buf.d_in, buf.d_out, in[i].width, in[i].height, kSize);
+        auto t2 = std::chrono::high_resolution_clock::now();
+        std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
+        cudaMemcpyAsync(out[i].data.data(),buf.d_out,out[i].width * out[i].height * sizeof(float),cudaMemcpyDeviceToHost, buf.stream);
+        cudaEventRecord(buf.e, buf.stream);
+    }
+    // 同步所有流
+    for (int i = 0; i < NUM_BUFFERS; ++i) {
+        cudaEventSynchronize(buffs[i].e);
+    }
+    freeDeviceMemory(buffs);
+}

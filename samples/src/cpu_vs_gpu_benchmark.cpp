@@ -9,6 +9,6 @@
 #include <string>
 
 int main(int argc, char* argv[]) {
-    gconv::convolve();
+    gconv::conv2dWithAsync();
     return 0;
 }

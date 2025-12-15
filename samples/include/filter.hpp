@@ -81,4 +81,7 @@ bool meanBlurFilter();
  * @return false 
  */
 bool laplacianFilter();
+
+bool conv2dWithAsync();
 }
+

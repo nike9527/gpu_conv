@@ -1,4 +1,5 @@
-﻿//=============================全局内存=======================================
+﻿#include "image.hpp"
+//=============================全局内存=======================================
 /**
  * @brief 自定义卷积
  * @param in  输入数据
@@ -110,3 +111,5 @@ extern void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const 
  * @param h   宽度
  */
 extern void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);
+//=========================================cuda stream===============================================
+extern void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const int kSize, const float* kernel,int block_w = 16, int block_h = 16);

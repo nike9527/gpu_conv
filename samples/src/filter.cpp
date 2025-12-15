@@ -225,6 +225,23 @@ bool laplacianFilter(){
     renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3,destPaht4},imgData.width,imgData.height);
     return true;
 }
-
+bool conv2dWithAsync(){
+    std::vector<std::string> srcPaht{"D:/C++/gpu_conv/image/lena.png","D:/C++/gpu_conv/image/16.png","D:/C++/gpu_conv/image/17.png"};
+    std::vector<std::string> ourPaht{"D:/C++/gpu_conv/image/lena_1.png","D:/C++/gpu_conv/image/16_1.png","D:/C++/gpu_conv/image/17_1.png"};
+    std::vector<Image> inImg;
+    std::vector<Image> outImg;
+    for(std::string& path : srcPaht){
+        Image imgData = Image::imageLoadGray(path);
+        inImg.emplace_back(imgData);
+        outImg.emplace_back(Image{imgData.width, imgData.height});
+    }
+    Kernel kernel = Kernel::laplacian();
+    conv2dWithAsyncGPU(inImg,outImg,kernel.size,kernel.kdata.data());
+    for(int i = 0; i< ourPaht.size(); i++){
+        outImg[i].imageSaveToGray(ourPaht[i]);
+    }
+    renderImage(ourPaht,800,600);
+    return true;
+}
 
 } // gconv

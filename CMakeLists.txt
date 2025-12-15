@@ -38,6 +38,7 @@ add_library(gconv STATIC
     src/convolution_cpu.cpp
     src/image.cpp
     src/kernel.cpp
+    cuda/cuda_utils.cuh
     cuda/convolution_gpu.cu
     cuda/convolution_global.cu
     cuda/convolution_shared.cu
