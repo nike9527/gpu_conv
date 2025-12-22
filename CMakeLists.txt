@@ -7,10 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Options
 # BUILD_SAMPLES：     是否编译生成可执行文件
 # BUILD_SAMPLES：     是否使用OPENMP
+# BENCH_TEST：        基准测试用例
 # BUILD_IMAGE_VIEWER：图片查看器工具
 #--------------------------
 option(BUILD_SAMPLES "Build sample executables" ON)
 option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
+option(BENCH_TEST "Build the benchmark case " ON)
 option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
 #--------------------------
 # CUDA
@@ -103,4 +105,10 @@ endif()
 #--------------------------
 if(BUILD_SAMPLES)
     add_subdirectory(samples)
+endif()
+#--------------------------
+# 基准程序示例
+#--------------------------
+if(BENCH_TEST)
+  add_subdirectory(test/benchmark)
 endif()
