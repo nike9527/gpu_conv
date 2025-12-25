@@ -95,7 +95,7 @@ BenchResult runBenchmark(const BenchCase& c) {
         printf("===cudaMalloc 失败: %s\n", cudaGetErrorString(err));
     }
 
-    Kernel kernel = getKernel(c.filter);
+    Kernel kernel = getKernel(c.filter,c.kSize);
     if( c.mType == MemType::GLOBAL){
         err = cudaMalloc(&d_kernel, c.kSize*c.kSize*sizeof(float));
         if (err != cudaSuccess) {
