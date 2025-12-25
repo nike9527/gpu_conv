@@ -27,7 +27,7 @@ __global__ void conv2dGlobalKernelWithShared(const float* __restrict__ input, fl
     int tileSize = tileWidth * tileHeight;  
     //边缘填充
     for (int idx = threadIdx.y * blockDim.x + threadIdx.x; idx < tileSize; idx += blockDim.x * blockDim.y) {
-        int iy = (blockIdx.y * blockDim.y - radius + idx / tileHeight);
+        int iy = (blockIdx.y * blockDim.y - radius + idx / tileWidth);
         int ix = (blockIdx.x * blockDim.x - radius + idx % tileWidth);
         // clamp
         ix = min(max(ix, 0), width - 1);
@@ -67,7 +67,7 @@ __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, f
     int tileSize = tileWidth * tileHeight;  
     //边缘填充
     for (int idx = threadIdx.y * blockDim.x + threadIdx.x; idx < tileSize; idx += blockDim.x * blockDim.y) {
-        int iy = (blockIdx.y * blockDim.y - radius + idx / tileHeight);
+        int iy = (blockIdx.y * blockDim.y - radius + idx / tileWidth);
         int ix = (blockIdx.x * blockDim.x - radius + idx % tileWidth);
         // clamp
         ix = min(max(ix, 0), width - 1);
@@ -149,7 +149,7 @@ __global__ void sharpenConvolutionWithShared(const float* __restrict__ input, fl
     int tileSize = tileWidth * tileHeight;  
     //边缘填充
     for (int idx = threadIdx.y * blockDim.x + threadIdx.x; idx < tileSize; idx += blockDim.x * blockDim.y) {
-        int iy = (blockIdx.y * blockDim.y - radius + idx / tileHeight);
+        int iy = (blockIdx.y * blockDim.y - radius + idx / tileWidth);
         int ix = (blockIdx.x * blockDim.x - radius + idx % tileWidth);
         // clamp
         ix = min(max(ix, 0), width - 1);
@@ -188,7 +188,7 @@ __global__ void meanBlurConvolutionWithShared(const float* __restrict__ input, f
     int tileSize = tileWidth * tileHeight;  
     //边缘填充
     for (int idx = threadIdx.y * blockDim.x + threadIdx.x; idx < tileSize; idx += blockDim.x * blockDim.y) {
-        int iy = (blockIdx.y * blockDim.y - radius + idx / tileHeight);
+        int iy = (blockIdx.y * blockDim.y - radius + idx / tileWidth);
         int ix = (blockIdx.x * blockDim.x - radius + idx % tileWidth);
         // clamp
         ix = min(max(ix, 0), width - 1);
@@ -227,7 +227,7 @@ __global__ void laplacianConvolutionWithShared(const float* __restrict__ input, 
     int tileSize = tileWidth * tileHeight;  
     //边缘填充
     for (int idx = threadIdx.y * blockDim.x + threadIdx.x; idx < tileSize; idx += blockDim.x * blockDim.y) {
-        int iy = (blockIdx.y * blockDim.y - radius + idx / tileHeight);
+        int iy = (blockIdx.y * blockDim.y - radius + idx / tileWidth);
         int ix = (blockIdx.x * blockDim.x - radius + idx % tileWidth);
         // clamp
         ix = min(max(ix, 0), width - 1);
