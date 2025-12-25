@@ -64,15 +64,15 @@ bool gaussianFilter(){
     imgData.imageSaveToGray(destPaht1);
     //================CPU进行高斯计算=====================
     auto t1 = std::chrono::high_resolution_clock::now();
-    gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height, 7, 5.0f);
+    gaussianConvolution(imgData.data.data(),out.data.data(),imgData.width,imgData.height, 5, 5.0f);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2-t1).count() << " ms\n";
     out.imageSaveToFile(destPaht2);
     //================GPU进行高斯计算-全局内存=====================
-    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
+    gaussianConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,5, 5.0f);
     out.imageSaveToFile(destPaht3);
     //================GPU进行高斯计算-共享内存=====================
-    gaussianConvolutionWithSharedGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,7, 5.0f);
+    gaussianConvolutionWithSharedGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,5, 5.0f);
     out.imageSaveToFile(destPaht4);
     renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3,destPaht4},imgData.width,imgData.height);
     return true;

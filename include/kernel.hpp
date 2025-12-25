@@ -11,6 +11,8 @@ private:
      * @param kdata 数据
      */
     Kernel(int ksize,std::vector<float> kdata);
+public:
+     Kernel() = default;
 public: 
     int size = 3;
     bool isConMen = true;

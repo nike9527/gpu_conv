@@ -9,6 +9,6 @@
 #include <string>
 
 int main(int argc, char* argv[]) {
-    gconv::conv2dWithAsync();
+    gconv::gaussianFilter();
     return 0;
 }

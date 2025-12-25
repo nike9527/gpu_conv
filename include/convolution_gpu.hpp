@@ -113,3 +113,5 @@ extern void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const 
 extern void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h, int block_w = 16, int block_h = 16);
 //=========================================cuda stream===============================================
 extern void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const int kSize, const float* kernel,int block_w = 16, int block_h = 16);
+
+extern void uploadKernelToConstant(const float* hostKernel,int kernelSize);

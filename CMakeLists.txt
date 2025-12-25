@@ -37,16 +37,17 @@ endif()
 # gconv库
 #--------------------------
 add_library(gconv STATIC
-    src/convolution_cpu.cpp
     src/image.cpp
     src/kernel.cpp
-    cuda/cuda_utils.cuh
+    src/convolution_cpu.cpp
+    src/cuda_mem_manage.cpp
     cuda/convolution_gpu.cu
     cuda/convolution_global.cu
     cuda/convolution_shared.cu
+    
 )
 set_target_properties(gconv PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-target_include_directories(gconv PUBLIC include)
+target_include_directories(gconv PUBLIC include ${CMAKE_SOURCE_DIR}/cuda)
 target_link_libraries(gconv PUBLIC CUDA::cudart)
 target_compile_definitions(gconv PRIVATE GCONV_EXPORTS)
 

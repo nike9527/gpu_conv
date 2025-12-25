@@ -1,25 +1,44 @@
 #pragma once
 #include <cuda_runtime.h>
-
+#include <cstdio>
 struct GpuTimer {
     cudaEvent_t start, stop;
-
+    cudaError_t err = cudaError::cudaSuccess;
     GpuTimer() {
-        cudaEventCreate(&start);
-        cudaEventCreate(&stop);
+       err =  cudaEventCreate(&start);
+        if (err != cudaSuccess) {
+            printf("cudaEventCreate start: %s\n", cudaGetErrorString(err));
+        }
+        err =  cudaEventCreate(&stop);
+        if (err != cudaSuccess) {
+            printf("cudaEventCreate stop: %s\n", cudaGetErrorString(err));
+        }
     }
     ~GpuTimer() {
-        cudaEventDestroy(start);
-        cudaEventDestroy(stop);
+        err =  cudaEventDestroy(start);
+        if (err != cudaSuccess) {
+            printf("cudaEventDestroy start: %s\n", cudaGetErrorString(err));
+        }
+        err = cudaEventDestroy(stop);
+        if (err != cudaSuccess) {
+            printf("cudaEventDestroy stop: %s\n", cudaGetErrorString(err));
+        }
     }
 
     void tic(cudaStream_t stream = 0) {
-        cudaEventRecord(start, stream);
+        err = cudaEventRecord(start, stream);
+        if (err != cudaSuccess) {
+            printf("cudaEventRecord : %s\n", cudaGetErrorString(err));
+        }
     }
 
     float toc(cudaStream_t stream = 0) {
         cudaEventRecord(stop, stream);
-        cudaEventSynchronize(stop);
+        cudaError_t err = cudaError::cudaSuccess;
+        err = cudaEventSynchronize(stop);
+        if (err != cudaSuccess) {
+            printf("cudaEventSynchronize stop: %s\n", cudaGetErrorString(err));
+        }
         float ms = 0.0f;
         cudaEventElapsedTime(&ms, start, stop);
         return ms;

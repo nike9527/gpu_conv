@@ -10,6 +10,8 @@ void printResult(const BenchCase& c, float ms, float gpixel) {
         << "Pipeline: " << toString(c.pipeline) << "\n"
         << "Res:      " << c.width << "x" << c.height << "\n"
         << "kSize:    " << c.kSize << "\n"
+        << "block:    (" << c.block_x<<", "<<c.block_y<<", "<<c.block_z<<")\n"
+        << "grid:     (" << c.grid_x<<", "<<c.grid_y<<", "<<c.grid_z<<")\n"
         << "Kernel:   " << ms << " ms\n"
         << "Throughput: " << gpixel << " GPixel/s\n\n";
 }

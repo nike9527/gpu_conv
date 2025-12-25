@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string>
+#include "kernel.hpp"
 /**
  * @brief 内存的类型
  */
@@ -27,6 +28,18 @@ enum class PipelineType {
 inline const char* toString(MemType k) {
     return k == MemType::GLOBAL ? "Global" : "Shared+Const";
 }
+
+inline const Kernel getKernel(FilterType f, int ksize = 3) {
+    switch (f) {
+        case FilterType::SOBEL:     return Kernel::sobelX();
+        case FilterType::GAUSSIAN:  return Kernel::gaussian(ksize,3.0);
+        case FilterType::MEAN:      return Kernel::meanBlur(ksize);
+        case FilterType::SHARPEN:   return Kernel::sharpen();
+        case FilterType::LAPLACIAN: return Kernel::laplacian();
+        default:                    return Kernel::filterKernel(3,{1,1,1,1,1,1,1,1,1});
+    }
+}
+
 inline const char* toString(FilterType f) {
     switch (f) {
         case FilterType::SOBEL:     return "Sobel";
@@ -37,6 +50,7 @@ inline const char* toString(FilterType f) {
         default:                    return "Custom";
     }
 }
+
 inline const char* toString(PipelineType p) {
     return p == PipelineType::SINGLE_STREAM ? "Single" : "Triple";
 }

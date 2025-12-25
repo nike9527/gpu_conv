@@ -75,7 +75,6 @@ __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, f
         tile[idx] = input[iy * width + ix];
     }        
     __syncthreads();
-    
     if (x < width && y < height) {
         float sum = 0.0f;
         for (int ky = -radius; ky <= radius; ++ky) {

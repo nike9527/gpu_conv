@@ -5,5 +5,5 @@ target_include_directories(bench_test
     ${CMAKE_SOURCE_DIR}/utils/image_viewer/include       
     ${CMAKE_SOURCE_DIR}/cuda       
 )
-
+# set_target_properties(bench_test PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 target_link_libraries(bench_test PRIVATE gconv)
