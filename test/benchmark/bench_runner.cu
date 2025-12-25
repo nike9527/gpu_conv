@@ -39,7 +39,7 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
             if(mtype == MemType::GLOBAL){
                 gaussianConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
             }else if(mtype == MemType::SHARED_CONST){
-                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2));
+                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 gaussianConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, width, height, kSize);
             }
             break;
@@ -47,7 +47,7 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
             if(mtype == MemType::GLOBAL){
                 meanBlurConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
             }else if(mtype == MemType::SHARED_CONST){
-                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2));
+                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 meanBlurConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, width, height, kSize);
             }
             break;
@@ -55,7 +55,7 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
             if(mtype == MemType::GLOBAL){
                 sharpenConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
             }else if(mtype == MemType::SHARED_CONST){
-                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2));
+                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 sharpenConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, width, height, kSize);
             }
 
@@ -64,7 +64,7 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
             if(mtype == MemType::GLOBAL){
                 laplacianConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
             }else if(mtype == MemType::SHARED_CONST){
-                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2));
+                int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 laplacianConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, width, height, kSize);
             }
             break;
@@ -119,16 +119,16 @@ BenchResult runBenchmark(const BenchCase& c) {
     cudaDeviceSynchronize();
     GpuTimer timer;
     timer.tic(stream);
-    if (c.pipeline == PipelineType::SINGLE_STREAM) {
+    // if (c.pipeline == PipelineType::SINGLE_STREAM) {
         for (int i = 0; i < ITERS; ++i) {
             launchConvSingleStream(dIn, dOut, c.width, c.height,c.kSize, c.filter, c.mType, d_kernel);
         }
-    } else {
-        // triple-buffer 通常按帧算，这里简化成 ITERS 帧
-        std::vector<float> hIn(c.width * c.height);
-        std::vector<float> hOut(c.width * c.height);
-        launchConvTripleBuffer(hIn.data(), hOut.data(),c.width, c.height, c.kSize,c.filter, c.mType, ITERS);
-    }
+    // } else {
+    //     // triple-buffer 通常按帧算，这里简化成 ITERS 帧
+    //     std::vector<float> hIn(c.width * c.height);
+    //     std::vector<float> hOut(c.width * c.height);
+    //     launchConvTripleBuffer(hIn.data(), hOut.data(),c.width, c.height, c.kSize,c.filter, c.mType, ITERS);
+    // }
     float totalMs = timer.toc(stream);
     float avgKernelMs = totalMs / ITERS;
     float gpixel =(float)(c.width * c.height) /(avgKernelMs * 1e-3f) / 1e9f;

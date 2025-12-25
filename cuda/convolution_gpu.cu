@@ -424,8 +424,8 @@ void laplacianConvolutionGPU(const float* in, float* out, const int w, const int
 //=========================================共享内存+常量内存===============================================
 void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
     size_t n = size_t(w) * size_t(h) * sizeof(float);
-    int radius = kSize / 2;
     float *d_in=nullptr, *d_out=nullptr;
+    int r = kSize / 2;
     cudaError_t err;
     err = cudaMalloc(&d_in, n); if (err != cudaSuccess) { 
         std::cerr<<"cudaMalloc d_in failed\n"; 
@@ -451,7 +451,7 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
-    int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+    int shraedSize = (block_w + 2*r) * (block_h + 2*r) * sizeof(float);
     auto t1 = std::chrono::high_resolution_clock::now();
     conv2dGlobalKernelWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     cudaDeviceSynchronize();
@@ -479,7 +479,7 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     Kernel gaKernel = Kernel::gaussian(kSize,sigma);
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
-    int radius = kSize / 2;
+    int r = kSize / 2;
     cudaError_t err;
     err = cudaMalloc(&d_in, n); 
     if (err != cudaSuccess) { 
@@ -506,7 +506,7 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     }
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
-    int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+    int shraedSize = (block_w + 2*r) * (block_h + 2*r) * sizeof(float);
     auto t1 = std::chrono::high_resolution_clock::now();
     gaussianConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     cudaDeviceSynchronize();
@@ -623,7 +623,7 @@ void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, con
 void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel sharpenKernel = Kernel::sharpen();
     int kSize = sharpenKernel.size;
-    int radius = kSize / 2;
+    int r = kSize / 2;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
     cudaError_t err;
@@ -653,7 +653,7 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
-    int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+    int shraedSize = (block_w + 2*r) * (block_h + 2*r) * sizeof(float);
     auto t1 = std::chrono::high_resolution_clock::now();
     sharpenConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -667,7 +667,7 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
 
     err = cudaMemcpy(out, d_out, n, cudaMemcpyDeviceToHost);
     if (err != cudaSuccess) { 
-        std::cerr<<"cudaMemcpy d_out failed\n";
+        std::cerr<<"cudaMemcpy d_out failed: "<<cudaGetErrorString(err)<<"\n"; 
         cudaFree(d_in); 
         cudaFree(d_out); 
     }
@@ -678,9 +678,9 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
 }
 void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int const kSize,int block_w = 16, int block_h = 16){
     Kernel meanKernel = Kernel::meanBlur(kSize);
-    int radius = kSize / 2;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
+    int r = kSize / 2;
     cudaError_t err;
     err = cudaMalloc(&d_in, n); if (err != cudaSuccess) { 
         std::cerr<<"cudaMalloc d_in failed\n"; 
@@ -705,7 +705,7 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
-    int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+    int shraedSize = (block_w + 2*r) * (block_h + 2*r) * sizeof(float);
     auto t1 = std::chrono::high_resolution_clock::now();
     meanBlurConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -731,9 +731,9 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
 void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w, const int h,int block_w = 16, int block_h = 16){
     Kernel laplacianKernel = Kernel::laplacian();
     int kSize = laplacianKernel.size;
-    int radius = kSize / 2;
     size_t n = size_t(w) * size_t(h) * sizeof(float);
     float *d_in=nullptr, *d_out=nullptr;
+    int r = kSize / 2;
     cudaError_t err;
     err = cudaMalloc(&d_in, n); if (err != cudaSuccess) { 
         std::cerr<<"cudaMalloc d_in failed\n"; 
@@ -759,7 +759,7 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
 
     dim3 block(block_w,block_h);
     dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
-    int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+    int shraedSize = (block_w + 2*r) * (block_h + 2*r) * sizeof(float);
     auto t1 = std::chrono::high_resolution_clock::now();
     laplacianConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, w, h, kSize);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -786,9 +786,9 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
 //=========================================cuda stream===============================================
 void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const int kSize, const float* kernel,int block_w = 16, int block_h = 16){
     cudaMemcpyToSymbol(constkernel, kernel, kSize*kSize*sizeof(float), 0, cudaMemcpyHostToDevice);
-    int radius = kSize / 2;
     bufferStream buffs[NUM_BUFFERS];
     int size = 3840 * 2160 * sizeof(float);
+    int r = kSize / 2;
     initializeDeviceMemory(buffs,size);
     for (int i = 0; i < in.size(); ++i){
         int cur = i % NUM_BUFFERS;
@@ -799,7 +799,7 @@ void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const in
         cudaMemcpyAsync(buf.d_in,in[i].data.data(),in[i].width * in[i].height * sizeof(float),cudaMemcpyHostToDevice,buf.stream);
         dim3 block(block_w,block_h);
         dim3 grid((in[i].width+block.x-1)/block.x, (in[i].height+block.y-1)/block.y);
-        int shraedSize = (block_w + (2 * radius)) * (block_h + (2 * radius));
+        int shraedSize = (block_w + (2 * r)) * (block_h + (2 * r)) * sizeof(float);
         auto t1 = std::chrono::high_resolution_clock::now();
         conv2dGlobalKernelWithShared<<<grid, block, shraedSize, buf.stream>>>(buf.d_in, buf.d_out, in[i].width, in[i].height, kSize);
         auto t2 = std::chrono::high_resolution_clock::now();

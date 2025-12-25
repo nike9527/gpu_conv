@@ -78,6 +78,7 @@ bool gaussianFilter(){
     return true;
 }
 /**
+ * 
  * @brief Sobel 边缘检测
  * @return true 
  * @return false 
@@ -100,11 +101,10 @@ bool sobelFilter(){
     //================GPU进行高斯计算-全局内存=====================
     sobelConvolutionGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,1, 1);
     out.imageSaveToFile(destPaht3);
-    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3},imgData.width,imgData.height);
     //================GPU进行高斯计算-共享内存=====================
     sobelConvolutionWithSharedGPU(imgData.data.data(),out.data.data(),imgData.width,imgData.height,1, 1);
     out.imageSaveToFile(destPaht4);
-    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht4},imgData.width,imgData.height);
+    renderImage(std::vector<std::string>{destPaht1,destPaht2,destPaht3,destPaht4},imgData.width,imgData.height);
     return true;
 }
 /**
@@ -227,7 +227,8 @@ bool laplacianFilter(){
 }
 bool conv2dWithAsync(){
     std::vector<std::string> srcPaht{"D:/C++/gpu_conv/image/lena.png","D:/C++/gpu_conv/image/16.png","D:/C++/gpu_conv/image/17.png"};
-    std::vector<std::string> ourPaht{"D:/C++/gpu_conv/image/lena_1.png","D:/C++/gpu_conv/image/16_1.png","D:/C++/gpu_conv/image/17_1.png"};
+    // std::vector<std::string> srcPaht{"D:/C++/gpu_conv/image/lenaGary.png","D:/C++/gpu_conv/image/lenaGPU_global.png","D:/C++/gpu_conv/image/lenaGPU_shared.png"};
+    std::vector<std::string> ourPaht{"D:/C++/gpu_conv/image/lena_2.png","D:/C++/gpu_conv/image/16_2.png","D:/C++/gpu_conv/image/17_2.png"};
     std::vector<Image> inImg;
     std::vector<Image> outImg;
     for(std::string& path : srcPaht){
@@ -235,6 +236,10 @@ bool conv2dWithAsync(){
         inImg.emplace_back(imgData);
         outImg.emplace_back(Image{imgData.width, imgData.height});
     }
+    // Kernel kernel = Kernel::laplacian();
+    // Kernel kernel = Kernel::gaussian(7,5.0);
+    // Kernel kernel = Kernel::sharpen();
+    // Kernel kernel = Kernel::meanBlur(7);
     Kernel kernel = Kernel::laplacian();
     conv2dWithAsyncGPU(inImg,outImg,kernel.size,kernel.kdata.data());
     for(int i = 0; i< ourPaht.size(); i++){
