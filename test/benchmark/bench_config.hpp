@@ -35,16 +35,16 @@ struct BenchResult {
 // }
 inline std::vector<BenchCase> getBenchCases() {
     return {
-        {1920, 1080, 3, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {1920, 1080, 3, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 3, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 3, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
 
-        {1920, 1080, 5, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {1920, 1080, 5, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 5, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 5, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
 
-        {1920, 1080, 7, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {1920, 1080, 7, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 7, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 7, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
 
-        {1920, 1080, 9, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {1920, 1080, 9, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 9, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::GLOBAL,       PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 9, 0, 0, 0, 0, 0, 0, FilterType::GAUSSIAN, MemType::SHARED_CONST, PipelineType::TRIPLE_BUFFER},
     };
 }

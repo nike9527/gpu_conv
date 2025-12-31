@@ -1,15 +1,7 @@
-add_executable(unit_sobel_test
-    test_sobel.cu
-)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cpu_unit_test)
+    add_subdirectory(cpu_unit_test)
+endif()
 
-target_link_libraries(unit_sobel_test
-    PRIVATE
-    cuda_conv_lib
-    GTest::gtest
-    GTest::gtest_main
-)
-
-add_test(
-    NAME unit_sobel
-    COMMAND unit_sobel_test
-)
+if (ENABLE_GPU_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/gpu_unit_test)
+    add_subdirectory(gpu_unit_test)
+endif()

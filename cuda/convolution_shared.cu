@@ -5,6 +5,8 @@
 #include <cstdio>
 // 卷积核放入常量内存（最快）
 extern __constant__ float constkernel[4096];
+__constant__ float c_sobel_dx[3] = {-1, 0, 1};
+__constant__ float c_sobel_sm[3] = { 1, 2, 1};
 #include <cuda_runtime.h>
 /**
  * @brief 自定义卷积
@@ -86,47 +88,95 @@ __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, f
     }
 }
 
+
 /**
- * @brief sobel算子
+ * @brief sobel算子 X方向
  * @param input 输入数据
  * @param output 输出数据
  * @param width 宽度
  * @param height 高度
  * @param kernel 内核
  * @param ksize 内核大小
- * @param kernelX 内核 X方向
- * @param kernelY 内核 Y方向
- * @param kSize 内核大小
  * @return __global__ 
  */
-__global__ void sobelConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, 
-    const int width, const int height, const float * const kernelX, const float * const kernelY, const int kSize)
+__global__ void sobelXConvolutionWithShared(const float* __restrict__ input,float* __restrict__ output,int width, int height)
 {
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    extern __shared__ float tile[];
+    int TILE_PITCH = blockDim.x + 2;
 
-    if (y >= width || x >= height) return;
+    int x  = blockIdx.x * blockDim.x + threadIdx.x;
+    int y  = blockIdx.y * blockDim.y + threadIdx.y;
+    int tx = threadIdx.x + 1;
+    int ty = threadIdx.y;
 
-    float gx = 0, gy = 0;
-    for (int ky = -1; ky <= 1; ++ky){
-        //使用镜像边界
-        int iy = y + ky;
-        if (iy < 0) iy = -iy - 1;
-        else if (iy >= height) iy = 2 * height - iy - 1;
-        for (int kx = -1; kx <= 1; ++kx){
-            int ix = x + kx;
-            if (ix < 0)  ix = -ix - 1;
-            else if (ix >= width) ix = 2*width - ix - 1;
+    if (y < height) {
+        tile[ty * TILE_PITCH + tx] =
+            (x < width) ? input[y * width + x] : 0.f;
 
-            float pixel = input[iy * width + ix];
-            int kIndex = (ky + 1) * kSize + (kx + 1);
+        if (threadIdx.x == 0)
+            tile[ty * TILE_PITCH] =
+                (x > 0) ? input[y * width + x - 1] : 0.f;
 
-            gx += (kernelX ? pixel * kernelX[kIndex] : 0);
-            gy += (kernelY ? pixel * kernelY[kIndex] : 0);
-        }
+        if (threadIdx.x == blockDim.x - 1)
+            tile[ty * TILE_PITCH + tx + 1] =
+                (x + 1 < width) ? input[y * width + x + 1] : 0.f;
     }
-    output[y * width + x] = ::sqrt(gx * gx + gy * gy);
+
+    __syncthreads();
+
+    if (x < width && y < height) {
+        float sum = 0.f;
+        #pragma unroll
+        for (int k = -1; k <= 1; k++)
+            sum += tile[ty * TILE_PITCH + tx + k] * c_sobel_dx[k + 1];
+
+        output[y * width + x] = sum;
+    }
 }
+
+
+/**
+ * @brief sobel算子 Y方向
+ * @param input 输入数据
+ * @param output 输出数据
+ * @param width 宽度
+ * @param height 高度
+ * @param kernel 内核
+ * @param ksize 内核大小
+ * @return __global__ 
+ */
+__global__ void sobelYConvolutionWithShared(const float* __restrict__ input,float* __restrict__ output,int width, int height)
+{
+    extern __shared__ float tile[];
+    int TILE_PITCH = blockDim.x;
+
+    int x  = blockIdx.x * blockDim.x + threadIdx.x;
+    int y  = blockIdx.y * blockDim.y + threadIdx.y;
+    int tx = threadIdx.x;
+    int ty = threadIdx.y + 1;
+
+    if (x < width) {
+        tile[ty * TILE_PITCH + tx] =(y < height) ? input[y * width + x] : 0.f;
+
+        if (threadIdx.y == 0)
+            tile[tx] =(y > 0) ? input[(y - 1) * width + x] : 0.f;
+
+        if (threadIdx.y == blockDim.y - 1)
+            tile[(ty + 1) * TILE_PITCH + tx] =(y + 1 < height) ? input[(y + 1) * width + x] : 0.f;
+    }
+
+    __syncthreads();
+
+    if (x < width && y < height) {
+        float sum = 0.f;
+        #pragma unroll
+        for (int k = -1; k <= 1; k++)
+            sum += tile[(ty + k) * TILE_PITCH + tx] * c_sobel_sm[k + 1];
+
+        output[y * width + x] = sum;
+    }
+}
+
 /**
  * @brief 锐化滤波器
  * @param input 输入数据

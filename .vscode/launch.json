@@ -5,35 +5,74 @@
             "name": "GPUCONV-Debug",
             "type": "cppvsdbg",
             "request": "launch",
-            // 关键路径：匹配 CMake Debug 输出（必须存在该 .exe）
             "program": "${workspaceFolder}/bin/Debug/samples_cpu_vs_gpu.exe",
             "args": [],
-            "stopAtEntry": true,  // 设为 true：调试时自动在 main 函数暂停（验证是否能断点）
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-             "environment": [
+            "environment": [
                 {
                     "name": "PATH",
                     "value": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.0\\bin;${env:PATH}"
                 }
-            ],
+            ]
         },
-         {
+        {
             "name": "bench-Debug",
             "type": "cppvsdbg",
             "request": "launch",
-            // 关键路径：匹配 CMake Debug 输出（必须存在该 .exe）
             "program": "${workspaceFolder}/bin/Debug/bench_test.exe",
             "args": [],
-            "stopAtEntry": true,  // 设为 true：调试时自动在 main 函数暂停（验证是否能断点）
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-             "environment": [
+            "environment": [
                 {
                     "name": "PATH",
                     "value": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.0\\bin;${env:PATH}"
                 }
-            ],
+            ]
+        },
+        {
+            "name": "unit_test-Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/cpu_unit_test.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.0\\bin;${env:PATH}"
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "enter program name, for example ${workspaceFolder}/a.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/path/to/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

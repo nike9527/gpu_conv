@@ -91,19 +91,27 @@ __global__ void conv2dGlobalKernelWithShared(const float* __restrict__ input, fl
   */
 __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const int kSize);
 /**
- * @brief sobel算子
+ * @brief sobel算子 X方向
  * @param input 输入数据
  * @param output 输出数据
  * @param width 宽度
  * @param height 高度
  * @param kernel 内核
  * @param ksize 内核大小
- * @param kernelX 内核 X方向
- * @param kernelY 内核 Y方向
- * @param kSize 内核大小
  * @return __global__ 
  */
-__global__ void sobelConvolutionWithShared(const float* __restrict__ input, float* __restrict__ output, const int width, const int height, const float * const kernelX, const float * const kernelY, const int kSize);
+__global__ void sobelXConvolutionWithShared(const float* __restrict__ input,float* __restrict__ output,int width, int height);
+/**
+ * @brief sobel算子 Y方向
+ * @param input 输入数据
+ * @param output 输出数据
+ * @param width 宽度
+ * @param height 高度
+ * @param kernel 内核
+ * @param ksize 内核大小
+ * @return __global__ 
+ */
+__global__ void sobelYConvolutionWithShared(const float* __restrict__ input,float* __restrict__ output,int width, int height);
 /**
  * @brief 锐化滤波器
  * @param input 输入数据

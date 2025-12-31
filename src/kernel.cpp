@@ -6,7 +6,7 @@
  * @param size 
  * @param kdata 
  */
-Kernel::Kernel(int ksize, std::vector<float> kdata):size(ksize),kdata(kdata){}
+Kernel::Kernel(int ksize, std::vector<float> kdata):size(ksize),kdata(kdata),radius(ksize/2){}
 
 Kernel Kernel::filterKernel(int ksize,std::vector<float> kdata){
   return Kernel(ksize*ksize,kdata);

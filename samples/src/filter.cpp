@@ -236,11 +236,11 @@ bool conv2dWithAsync(){
         inImg.emplace_back(imgData);
         outImg.emplace_back(Image{imgData.width, imgData.height});
     }
-    // Kernel kernel = Kernel::laplacian();
+    Kernel kernel = Kernel::laplacian();
     // Kernel kernel = Kernel::gaussian(7,5.0);
     // Kernel kernel = Kernel::sharpen();
     // Kernel kernel = Kernel::meanBlur(7);
-    Kernel kernel = Kernel::laplacian();
+    // Kernel kernel = Kernel::laplacian();
     conv2dWithAsyncGPU(inImg,outImg,kernel.size,kernel.kdata.data());
     for(int i = 0; i< ourPaht.size(); i++){
         outImg[i].imageSaveToGray(ourPaht[i]);

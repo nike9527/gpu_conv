@@ -7,12 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Options
 # BUILD_SAMPLES：     是否编译生成可执行文件
 # BUILD_SAMPLES：     是否使用OPENMP
-# BENCH_TEST：        基准测试用例
+# BUILD_TESTS         测试用例
 # BUILD_IMAGE_VIEWER：图片查看器工具
 #--------------------------
 option(BUILD_SAMPLES "Build sample executables" ON)
 option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
-option(BENCH_TEST "Build the benchmark case " ON)
+option(BUILD_TESTS "Build the Test case " ON)
 option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
 #--------------------------
 # CUDA
@@ -29,10 +29,17 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 # MSVC Runtime (统一 /MD /MDd)
 #--------------------------
 if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
-
-
+# if (MSVC)
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+      # 清除 MSVC_RUNTIME_LIBRARY 的默认值
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  
+    # 或者在更具体的target设置中
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY_DEFAULT "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# endif()
 #--------------------------
 # gconv库
 #--------------------------
@@ -40,14 +47,31 @@ add_library(gconv STATIC
     src/image.cpp
     src/kernel.cpp
     src/convolution_cpu.cpp
-    src/cuda_mem_manage.cpp
     cuda/convolution_gpu.cu
     cuda/convolution_global.cu
     cuda/convolution_shared.cu
     
 )
+# set_target_properties(gconv PROPERTIES
+#     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
+# )
+
 set_target_properties(gconv PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-target_include_directories(gconv PUBLIC include ${CMAKE_SOURCE_DIR}/cuda)
+target_include_directories(gconv 
+PUBLIC 
+        # 构建时：使用源码目录的 include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # 构建时：cuda 目录
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/cuda>
+        # 安装后：使用系统的 include 目录
+        $<INSTALL_INTERFACE:include>
+PRIVATE
+        # 仅内部使用的头文件目录
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        # 如果 CUDA 头文件也需要内部使用
+        ${CMAKE_CURRENT_SOURCE_DIR}/cuda  
+)
+
 target_link_libraries(gconv PUBLIC CUDA::cudart)
 target_compile_definitions(gconv PRIVATE GCONV_EXPORTS)
 
@@ -108,8 +132,8 @@ if(BUILD_SAMPLES)
     add_subdirectory(samples)
 endif()
 #--------------------------
-# 基准程序示例
+# Test程序示例
 #--------------------------
-if(BENCH_TEST)
-  add_subdirectory(test/benchmark)
+if(BUILD_TESTS)
+    add_subdirectory(test)
 endif()

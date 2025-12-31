@@ -1,9 +1,12 @@
 ﻿#pragma once
 #include <vector>
+enum KernelType {GAUSSIAN, SOBELX, SOBELY, SHARPEN, MEANBLUR, LAPLACIAN, FILTERKERNEL};
 /**
  * @brief 存放内核
  */
 class Kernel{
+public:
+     Kernel() = default;
 private:
     /**
      * @brief Construct a new Kernel object
@@ -11,11 +14,9 @@ private:
      * @param kdata 数据
      */
     Kernel(int ksize,std::vector<float> kdata);
-public:
-     Kernel() = default;
 public: 
     int size = 3;
-    bool isConMen = true;
+    int radius = 1;
     std::vector<float> kdata;
     /**
      * @brief 自定义内核
