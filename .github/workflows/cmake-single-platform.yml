@@ -16,7 +16,9 @@ jobs:
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +34,9 @@ jobs:
         run: |
           cmake -S . -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-            -DENABLE_CUDA=ON
+            -DENABLE_CUDA=OFF
+            -DBUILD_TESTS=ON
+            -DBUILD_BENCH=OFF
 
       - name: Build
         # Build your program with the given configuration
@@ -48,3 +52,30 @@ jobs:
       # CUDA 测试：允许跳过
       - name: Run CUDA tests (optional)
         run: ctest --test-dir build -L cuda --output-on-failure
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+  perf:
+    runs-on: ubuntu-latest
+    # 👇 没 GPU 就跳过
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DENABLE_CUDA=ON
+          -DBUILD_BENCH=ON
+          -DBUILD_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run benchmark
+        run: |
+          cd build/bench
+          ./bench_conv
+
+      - name: Check performance
+        run: python3 ../ci/check_perf.py

@@ -1,15 +1,18 @@
-add_executable(integration_pipeline_test
-    test_pipeline.cu
+add_executable(integration_tests
+    test_pipeline.cpp
 )
 
-target_link_libraries(integration_pipeline_test
+target_link_libraries(integration_tests
     PRIVATE
-    cuda_conv_lib
+    gconv
     GTest::gtest
     GTest::gtest_main
 )
-
-add_test(
-    NAME integration_pipeline
-    COMMAND integration_pipeline_test
-)
+copy_runtime_dlls(conv_benchmark)
+copy_runtime_dlls(sample_sobel)
+include(GoogleTest)
+if (WIN32)
+gtest_discover_tests(integration_tests DISCOVERY_MODE POST_BUILD)
+else()
+    gtest_discover_tests(unit_cpu_tests)
+endif()

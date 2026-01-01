@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <vector>
+#include <string>
 enum KernelType {GAUSSIAN, SOBELX, SOBELY, SHARPEN, MEANBLUR, LAPLACIAN, FILTERKERNEL};
 /**
  * @brief 存放内核
@@ -59,4 +60,17 @@ public:
      * @return Kernel 
      */
     static Kernel laplacian();
+    // 添加辅助函数获取内核名称
+    std::string static getKernelName(KernelType type) {
+        switch(type) {
+            case KernelType::GAUSSIAN: return "Gaussian";
+            case KernelType::SOBELX: return "Sobel X";
+            case KernelType::SOBELY: return "Sobel Y";
+            case KernelType::SHARPEN: return "Sharpen";
+            case KernelType::MEANBLUR: return "Mean Blur";
+            case KernelType::LAPLACIAN: return "Laplacian";
+            case KernelType::FILTERKERNEL: return "filterKernel";
+            default: return "Unknown";
+        }
+    }
 };

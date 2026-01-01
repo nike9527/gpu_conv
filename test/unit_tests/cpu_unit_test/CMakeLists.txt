@@ -13,9 +13,11 @@ target_link_libraries(unit_cpu_tests
     GTest::gtest_main  # 链接 gtest_main 提供 main 函数
 )
 # 关键：设置运行目录
-set_target_properties(unit_cpu_tests PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
+# set_target_properties(unit_cpu_tests PROPERTIES
+#     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+# )
+
+copy_runtime_dlls(unit_cpu_tests)
 # set_target_properties(unit_cpu_tests PROPERTIES
 #     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
 # )
@@ -23,9 +25,14 @@ set_target_properties(unit_cpu_tests PROPERTIES
 #自动发现 GoogleTest 测试用例
 #---------------------------------------------
 include(GoogleTest)
+if (WIN32)
 gtest_discover_tests(unit_cpu_tests
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+    DISCOVERY_MODE POST_BUILD
 )
+else()
+    gtest_discover_tests(unit_cpu_tests)
+endif()
 #---------------------------------------------
 # 添加测试
 #---------------------------------------------
