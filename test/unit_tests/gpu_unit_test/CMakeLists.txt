@@ -1,5 +1,5 @@
 add_executable(unit_gpu_tests
-    test_conv_gpu.cu
+    test_conv_gpu.cpp
 )
 
 set_target_properties(unit_gpu_tests PROPERTIES
@@ -13,10 +13,13 @@ target_link_libraries(unit_gpu_tests
     GTest::gtest
     GTest::gtest_main
 )
-copy_runtime_dlls(unit_cpu_tests)
+copy_runtime_dlls(unit_gpu_tests)
 include(GoogleTest)
 if (WIN32)
-gtest_discover_tests(unit_gpu_tests DISCOVERY_MODE POST_BUILD)
+gtest_discover_tests(unit_gpu_tests
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+    DISCOVERY_MODE POST_BUILD
+)
 else()
-    gtest_discover_tests(unit_cpu_tests)
+    gtest_discover_tests(unit_gpu_tests)
 endif()

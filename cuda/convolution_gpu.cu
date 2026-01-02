@@ -27,7 +27,7 @@ void conv2dGlobalGPU(const float* in, float* out, const int w, const int h, cons
     stop.record();
     cudaEventSynchronize(stop);// 等待事件完成 
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -46,7 +46,7 @@ void gaussianConvolutionGPU(const float* in, float* out, const int w, const int 
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -69,7 +69,7 @@ void sobelConvolutionGPU(const float* in, float* out, const int w, const int h,c
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 } 
@@ -89,7 +89,7 @@ void sharpenConvolutionGPU(const float* in, float* out, const int w, const int h
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -108,7 +108,7 @@ void meanBlurConvolutionGPU(const float* in, float* out, const int w, const int 
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -128,7 +128,7 @@ void laplacianConvolutionGPU(const float* in, float* out, const int w, const int
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -151,7 +151,7 @@ void conv2dWithSharedGPU(const float* in, float* out, const int w, const int h, 
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -173,7 +173,7 @@ void gaussianConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -192,7 +192,7 @@ void sobelConvolutionWithSharedGPU(const float* in, float* out, const int w, con
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 } 
@@ -215,7 +215,7 @@ void sharpenConvolutionWithSharedGPU(const float* in, float* out, const int w, c
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -237,7 +237,7 @@ void meanBlurConvolutionWithSharedGPU(const float* in, float* out, const int w, 
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -260,7 +260,7 @@ void laplacianConvolutionWithSharedGPU(const float* in, float* out, const int w,
     stop.record(); 
     cudaEventSynchronize(stop);// 等待事件完成
     CHECK_KERNEL_ERROR();
-    std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     d_output.copy_to_host_async(out,w * h);
     return;
 }
@@ -285,7 +285,7 @@ void conv2dWithAsyncGPU(std::vector<Image>& in,std::vector<Image>& out, const in
         auto t1 = std::chrono::high_resolution_clock::now();
         conv2dGlobalKernelWithShared<<<grid, block, shraedSize, buf.stream()>>>(buf.d_in(), buf.d_out(), in[i].width, in[i].height, kSize);
         auto t2 = std::chrono::high_resolution_clock::now();
-        std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
+        // std::cout << "GPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
         cudaMemcpyAsync(out[i].data.data(),buf.d_out(),out[i].width * out[i].height * sizeof(float),cudaMemcpyDeviceToHost, buf.stream());
         cudaEventRecord(buf.event(), buf.stream());
     }

@@ -1,5 +1,5 @@
 #pragma once
-#include "cuda_check.hpp"
+#include "cuda_exception.hpp"
 
 class cuda_event {
 public:

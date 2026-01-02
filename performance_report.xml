@@ -1,27 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="16" failures="0" disabled="0" errors="0" time="3.993" timestamp="2026-01-02T02:41:28.413" name="AllTests">
-  <testsuite name="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="1.23" timestamp="2026-01-02T02:41:28.414">
-    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.083" timestamp="2026-01-02T02:41:28.414" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.19" timestamp="2026-01-02T02:41:28.498" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.285" timestamp="2026-01-02T02:41:28.689" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.669" timestamp="2026-01-02T02:41:28.975" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
+<testsuites tests="40" failures="20" disabled="0" errors="0" time="16.878" timestamp="2026-01-02T23:46:24.554" name="AllTests">
+  <testsuite name="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" tests="8" failures="4" disabled="0" skipped="0" errors="0" time="4.013" timestamp="2026-01-02T23:46:24.557">
+    <testcase name="PerformanceBenchmarkGAUSSIAN/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.019" timestamp="2026-01-02T23:46:24.557" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.019" timestamp="2026-01-02T23:46:24.578" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.06" timestamp="2026-01-02T23:46:24.599" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.058" timestamp="2026-01-02T23:46:24.660" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.263" timestamp="2026-01-02T23:46:24.721" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 13.041990049751243 vs 38.25&#x0A;性能警告: 20.100000000000001 ms &gt; 建议阈值 38.25 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 13.041990049751243 vs 38.25
+性能警告: 20.100000000000001 ms > 建议阈值 38.25 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 00-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.563" timestamp="2026-01-02T23:46:24.988" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.7996460176991143 vs 13.6&#x0A;性能警告: 45.200000000000003 ms &gt; 建议阈值 13.6 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.7996460176991143 vs 13.6
+性能警告: 45.200000000000003 ms > 建议阈值 13.6 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.897" timestamp="2026-01-02T23:46:25.555" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 13.981013333333333 vs 36.3375&#x0A;性能警告: 75 ms &gt; 建议阈值 36.337499999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 13.981013333333333 vs 36.3375
+性能警告: 75 ms > 建议阈值 36.337499999999999 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="2.111" timestamp="2026-01-02T23:46:26.456" classname="PerformanceTestsGAUSSIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.6833387533875337 vs 15.3425&#x0A;性能警告: 184.5 ms &gt; 建议阈值 15.342499999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.6833387533875337 vs 15.3425
+性能警告: 184.5 ms > 建议阈值 15.342499999999999 MP/s
+]]></failure>
+    </testcase>
   </testsuite>
-  <testsuite name="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0.743" timestamp="2026-01-02T02:41:29.645">
-    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.079" timestamp="2026-01-02T02:41:29.645" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.082" timestamp="2026-01-02T02:41:29.726" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.296" timestamp="2026-01-02T02:41:29.809" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.282" timestamp="2026-01-02T02:41:30.106" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
+  <testsuite name="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" tests="8" failures="4" disabled="0" skipped="0" errors="0" time="2.56" timestamp="2026-01-02T23:46:28.573">
+    <testcase name="PerformanceBenchmarkGAUSSIAN/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.096" timestamp="2026-01-02T23:46:28.574" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.043" timestamp="2026-01-02T23:46:28.706" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.061" timestamp="2026-01-02T23:46:28.750" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.055" timestamp="2026-01-02T23:46:28.812" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.242" timestamp="2026-01-02T23:46:28.870" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 13.943829787234041 vs 40.1625&#x0A;性能警告: 18.800000000000001 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 13.943829787234041 vs 40.1625
+性能警告: 18.800000000000001 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.236" timestamp="2026-01-02T23:46:29.114" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.403516483516482 vs 40.1625&#x0A;性能警告: 18.199999999999999 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.403516483516482 vs 40.1625
+性能警告: 18.199999999999999 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.888" timestamp="2026-01-02T23:46:29.352" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.403516483516482 vs 40.1625&#x0A;性能警告: 72.799999999999997 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.403516483516482 vs 40.1625
+性能警告: 72.799999999999997 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 03-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.891" timestamp="2026-01-02T23:46:30.242" classname="PerformanceTestsSHARPEN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.150823211875842 vs 40.1625&#x0A;性能警告: 74.099999999999994 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.150823211875842 vs 40.1625
+性能警告: 74.099999999999994 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
   </testsuite>
-  <testsuite name="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="1.261" timestamp="2026-01-02T02:41:30.390">
-    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.079" timestamp="2026-01-02T02:41:30.390" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.191" timestamp="2026-01-02T02:41:30.470" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.313" timestamp="2026-01-02T02:41:30.663" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.674" timestamp="2026-01-02T02:41:30.977" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
+  <testsuite name="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" tests="8" failures="4" disabled="0" skipped="0" errors="0" time="3.978" timestamp="2026-01-02T23:46:31.137">
+    <testcase name="PerformanceBenchmarkGAUSSIAN/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.018" timestamp="2026-01-02T23:46:31.139" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.014" timestamp="2026-01-02T23:46:31.159" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.057" timestamp="2026-01-02T23:46:31.175" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.055" timestamp="2026-01-02T23:46:31.234" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.231" timestamp="2026-01-02T23:46:31.290" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.563555555555556 vs 36.3375&#x0A;性能警告: 18 ms &gt; 建议阈值 36.337499999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.563555555555556 vs 36.3375
+性能警告: 18 ms > 建议阈值 36.337499999999999 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.538" timestamp="2026-01-02T23:46:31.523" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.723668122270742 vs 12.92&#x0A;性能警告: 45.799999999999997 ms &gt; 建议阈值 12.92 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.723668122270742 vs 12.92
+性能警告: 45.799999999999997 ms > 建议阈值 12.92 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.89" timestamp="2026-01-02T23:46:32.064" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.423328748280605 vs 36.3375&#x0A;性能警告: 72.700000000000003 ms &gt; 建议阈值 36.337499999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.423328748280605 vs 36.3375
+性能警告: 72.700000000000003 ms > 建议阈值 36.337499999999999 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 04-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="2.156" timestamp="2026-01-02T23:46:32.957" classname="PerformanceTestsMEANBLUR/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.723668122270742 vs 15.3425&#x0A;性能警告: 183.19999999999999 ms &gt; 建议阈值 15.342499999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.723668122270742 vs 15.3425
+性能警告: 183.19999999999999 ms > 建议阈值 15.342499999999999 MP/s
+]]></failure>
+    </testcase>
   </testsuite>
-  <testsuite name="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0.753" timestamp="2026-01-02T02:41:31.652">
-    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.078" timestamp="2026-01-02T02:41:31.652" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.079" timestamp="2026-01-02T02:41:31.731" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.294" timestamp="2026-01-02T02:41:31.811" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
-    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="191" status="run" result="completed" time="0.299" timestamp="2026-01-02T02:41:32.106" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
+  <testsuite name="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" tests="8" failures="4" disabled="0" skipped="0" errors="0" time="2.355" timestamp="2026-01-02T23:46:35.118">
+    <testcase name="PerformanceBenchmarkGAUSSIAN/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.017" timestamp="2026-01-02T23:46:35.121" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.015" timestamp="2026-01-02T23:46:35.139" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.058" timestamp="2026-01-02T23:46:35.156" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.055" timestamp="2026-01-02T23:46:35.215" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.225" timestamp="2026-01-02T23:46:35.272" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.727191011235954 vs 40.1625&#x0A;性能警告: 17.800000000000001 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.727191011235954 vs 40.1625
+性能警告: 17.800000000000001 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.232" timestamp="2026-01-02T23:46:35.498" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.483093922651932 vs 40.1625&#x0A;性能警告: 18.100000000000001 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.483093922651932 vs 40.1625
+性能警告: 18.100000000000001 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.86" timestamp="2026-01-02T23:46:35.733" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.624490934449092 vs 40.1625&#x0A;性能警告: 71.700000000000003 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.624490934449092 vs 40.1625
+性能警告: 71.700000000000003 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 05-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.876" timestamp="2026-01-02T23:46:36.596" classname="PerformanceTestsLAPLACIAN/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.423328748280605 vs 40.1625&#x0A;性能警告: 72.700000000000003 ms &gt; 建议阈值 40.162500000000001 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.423328748280605 vs 40.1625
+性能警告: 72.700000000000003 ms > 建议阈值 40.162500000000001 MP/s
+]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat" tests="8" failures="4" disabled="0" skipped="0" errors="0" time="3.951" timestamp="2026-01-02T23:46:37.478">
+    <testcase name="PerformanceBenchmarkGAUSSIAN/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.019" timestamp="2026-01-02T23:46:37.479" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.015" timestamp="2026-01-02T23:46:37.499" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.058" timestamp="2026-01-02T23:46:37.516" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmarkGAUSSIAN/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="197" status="run" result="completed" time="0.055" timestamp="2026-01-02T23:46:37.575" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat" />
+    <testcase name="PerformanceBenchmark/0" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 03-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.235" timestamp="2026-01-02T23:46:37.631" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 14.169945945945946 vs 38.25&#x0A;性能警告: 18.5 ms &gt; 建议阈值 38.25 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 14.169945945945946 vs 38.25
+性能警告: 18.5 ms > 建议阈值 38.25 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/1" value_param="20-byte object &lt;00-02 00-00 00-02 00-00 0A-00 00-00 05-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.544" timestamp="2026-01-02T23:46:37.868" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.6864208242950101 vs 13.6&#x0A;性能警告: 46.100000000000001 ms &gt; 建议阈值 13.6 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.6864208242950101 vs 13.6
+性能警告: 46.100000000000001 ms > 建议阈值 13.6 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/2" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 03-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="0.904" timestamp="2026-01-02T23:46:38.414" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 13.833456464379948 vs 38.25&#x0A;性能警告: 75.799999999999997 ms &gt; 建议阈值 38.25 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 13.833456464379948 vs 38.25
+性能警告: 75.799999999999997 ms > 建议阈值 38.25 MP/s
+]]></failure>
+    </testcase>
+    <testcase name="PerformanceBenchmark/3" value_param="20-byte object &lt;00-04 00-00 00-04 00-00 0A-00 00-00 05-00 00-00 06-00 00-00&gt;" file="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp" line="200" status="run" result="completed" time="2.107" timestamp="2026-01-02T23:46:39.321" classname="PerformanceTestsFILTERKERNEL/cpuConv2dPerformanceTestFloat">
+      <failure message="D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245&#x0A;Expected: (throughput) &gt; (threshold_mp_s), actual: 5.661857451403888 vs 16.15&#x0A;性能警告: 185.19999999999999 ms &gt; 建议阈值 16.149999999999999 MP/s&#x0A;" type=""><![CDATA[D:\C++\gpu_conv\test\unit_tests\cpu_unit_test\test_conv_cpu.cpp:245
+Expected: (throughput) > (threshold_mp_s), actual: 5.661857451403888 vs 16.15
+性能警告: 185.19999999999999 ms > 建议阈值 16.149999999999999 MP/s
+]]></failure>
+    </testcase>
   </testsuite>
 </testsuites>

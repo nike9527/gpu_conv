@@ -3,6 +3,17 @@ project(gpu_conv_lib LANGUAGES C CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 新增模块：
+# 双边滤波（Bilateral Filter）
+# 中值滤波（Median Filter）
+# 非局部均值（NLM）
+# 引导滤波 / Fast Guided Filter
+# 高斯金字塔（Gaussian Pyramid）
+# DoG / LoG
+# Canny（你已有 Sobel，可以继续往下做）
+
+
 #--------------------------
 # Options
 # BUILD_SAMPLES：     是否编译生成可执行文件

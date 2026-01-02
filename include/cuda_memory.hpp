@@ -1,5 +1,5 @@
-#pragma once
-#include "cuda_check.hpp"
+﻿#pragma once
+#include "cuda_exception.hpp"
 #include <cstddef>
 #include <utility>
 
