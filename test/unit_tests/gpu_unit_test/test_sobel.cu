@@ -2,7 +2,7 @@
 #include <chrono>
 #include "convolution_gpu.hpp"
 #include "convolution_cpu.hpp"
-#include "kernel.hpp"
+#include "filter.hpp"
 
 
 void run_sobel_cuda(const float*, float*, int, int);

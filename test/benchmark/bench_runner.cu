@@ -1,23 +1,23 @@
-﻿#include "bench_timer.hpp"
+﻿#include "core/gpu_timer.hpp"
+#include "cuda/cuda_memory.hpp"
 #include "bench_types.hpp"
 #include "bench_config.hpp"
 #include "bench_filter.hpp"
-#include "convolution_gpu.hpp"
 #include "convolution_kernel.cuh"
-#include "kernel.hpp"
-#include <cuda_runtime.h>
+#include "core/triple_pipeline.hpp"
 #include <vector>
 #include <numeric>
 
-
+extern cudaError_t memCpyConstant(const float* hostKernel,int kernelSize);
 // ====== 你需要对接的接口（自己实现） ======
-void launchConvSingleStream(const float* d_in, float* d_out,int width, int height, int kSize,FilterType filter, MemType mtype, float* d_kernel, int block_w=16,int block_h=16){
+void launchConvSingleStream(const float* d_in, float* d_out,int width, int height, int kSize,filter_type filter_type, mem_type mtype, float* d_kernel, int block_w=16,int block_h=16){
     dim3 block(block_w,block_h);
     dim3 grid((width+block.x-1)/block.x, (height+block.y-1)/block.y);
-    switch (filter) {
-        case FilterType::SOBEL:{
-                Kernel sobelX = Kernel::sobelX();
-                Kernel sobelY = Kernel::sobelY();
+    switch (filter_type) {
+        case filter_type::SOBEL:
+            {
+                filter sobelX = filter::sobelX();
+                filter sobelY = filter::sobelY();
                 float* d_kernelX=nullptr;
                 float* d_kernelY=nullptr;
                 cudaMalloc(&d_kernelX, kSize*kSize*sizeof(float));
@@ -25,45 +25,45 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
                 cudaMemcpy(d_kernelX, sobelX.kdata.data(), kSize*kSize*sizeof(float), cudaMemcpyHostToDevice);
                 cudaMemcpy(d_kernelY, sobelY.kdata.data(), kSize*kSize*sizeof(float), cudaMemcpyHostToDevice);
 
-                if(mtype == MemType::GLOBAL){
+                if(mtype == mem_type::GLOBAL){
                     sobelConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernelX, d_kernelY, kSize);
-                }else if(mtype == MemType::SHARED_CONST){
+                }else if(mtype == mem_type::SHAREDCONST){
                     int shraedSize = block_w + (kSize/2) * block_h + (kSize/2);
                     sobelConvolution<<<grid, block, shraedSize>>>(d_in, d_out, width, height, d_kernelX, d_kernelY, kSize);
                 }
                 cudaFree(d_kernelX);
                 cudaFree(d_kernelY);
-                break;
             }
-        case FilterType::GAUSSIAN:
-            if(mtype == MemType::GLOBAL){
+            break;
+        case filter_type::GAUSSIAN:
+            if(mtype == mem_type::GLOBAL){
                 gaussianConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
-            }else if(mtype == MemType::SHARED_CONST){
+            }else if(mtype == mem_type::SHAREDCONST){
                 int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 gaussianConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, width, height, kSize);
             }
             break;
-        case FilterType::MEAN:
-            if(mtype == MemType::GLOBAL){
+        case filter_type::MEANBLUR:
+            if(mtype == mem_type::GLOBAL){
                 meanBlurConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
-            }else if(mtype == MemType::SHARED_CONST){
+            }else if(mtype == mem_type::SHAREDCONST){
                 int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 meanBlurConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, width, height, kSize);
             }
             break;
-        case FilterType::SHARPEN:
-            if(mtype == MemType::GLOBAL){
+        case filter_type::SHARPEN:
+            if(mtype == mem_type::GLOBAL){
                 sharpenConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
-            }else if(mtype == MemType::SHARED_CONST){
+            }else if(mtype == mem_type::SHAREDCONST){
                 int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 sharpenConvolutionWithShared<<<grid, block, shraedSize>>>(d_in, d_out, width, height, kSize);
             }
 
             break;
-        case FilterType::LAPLACIAN:
-            if(mtype == MemType::GLOBAL){
+        case filter_type::LAPLACIAN:
+            if(mtype == mem_type::GLOBAL){
                 laplacianConvolution<<<grid, block>>>(d_in, d_out, width, height, d_kernel, kSize);
-            }else if(mtype == MemType::SHARED_CONST){
+            }else if(mtype == mem_type::SHAREDCONST){
                 int shraedSize = (block_w + (2 * kSize/2)) * (block_h + (2 * kSize/2)) * sizeof(float);
                 laplacianConvolutionWithShared<<<grid, block,shraedSize>>>(d_in, d_out, width, height, kSize);
             }
@@ -73,69 +73,58 @@ void launchConvSingleStream(const float* d_in, float* d_out,int width, int heigh
     }
 }
 
-void launchConvTripleBuffer(const float* hIn, float* hOut,int w, int h, int kSize,FilterType filter, MemType mtype,int iters){
+void launchConvTripleBuffer(const float* hIn, float* hOut,int w, int h, int kSize,filter_type filter, mem_type mtype,int iters){
+    triple_pipeline<float> pipe(w * h);
+    auto& buf = pipe.acquire();
+    int bytes = w * h * sizeof(float);
+    std::memcpy(buf.h_in(), hIn, bytes);
+    cudaMemcpyAsync(buf.d_in(), buf.h_in(), bytes,cudaMemcpyHostToDevice, buf.stream());
+    dim3 block(16,16);
+    dim3 grid((w+block.x-1)/block.x, (h+block.y-1)/block.y);
+    int shraedSize = (block.x + (2 * kSize/2)) * (block.y + (2 * kSize/2)) * sizeof(float);
+    sharpenConvolutionWithShared<<<grid, block, shraedSize, buf.stream()>>>(buf.d_in(), buf.d_out(), w, h, kSize);
+    cudaMemcpyAsync(buf.h_out(), buf.d_out(), bytes,cudaMemcpyDeviceToHost, buf.stream());
 
+    pipe.submit(buf);
+    auto* done = pipe.try_fetch();
+    // done->h_out();
+    
 }
 // ===========================================
 
 BenchResult runBenchmark(const BenchCase& c) {
     const int WARMUP = 10;
     const int ITERS  = 100;
-    cudaError_t err = cudaError::cudaSuccess;
-    size_t bytes = c.width * c.height * sizeof(float);
-    float* dIn;  
-    float* d_kernel = nullptr;
-    err = cudaMalloc(&dIn, bytes);
-    if (err != cudaSuccess) {
-        printf("---cudaMalloc 失败: %s\n", cudaGetErrorString(err));
+    gpu_timer timer;
+    size_t size = c.width * c.height;
+    cuda_memory<float> dIn(size), dOut(size);
+    cuda_memory<float> d_kernel(c.kSize*c.kSize);
+    filter kernel = getFilter(c.filter,c.kSize);
+    if( c.mType == mem_type::GLOBAL){
+        size_t dSize = c.kSize * c.kSize;
+        d_kernel.copy_from_host(kernel.kdata.data(),dSize);
+    }else if( c.mType == mem_type::SHAREDCONST){
+        CUDA_CHECK(memCpyConstant(kernel.kdata.data(), c.kSize*c.kSize*sizeof(float)));
     }
-    float* dOut; 
-    err = cudaMalloc(&dOut, bytes);
-    if (err != cudaSuccess) {
-        printf("===cudaMalloc 失败: %s\n", cudaGetErrorString(err));
-    }
-
-    Kernel kernel = getKernel(c.filter,c.kSize);
-    if( c.mType == MemType::GLOBAL){
-        err = cudaMalloc(&d_kernel, c.kSize*c.kSize*sizeof(float));
-        if (err != cudaSuccess) {
-            printf("===cudaMalloc kernel: %s\n", cudaGetErrorString(err));
-        }
-        err = cudaMemcpy(d_kernel, kernel.kdata.data(), c.kSize*c.kSize*sizeof(float), cudaMemcpyHostToDevice);
-        if (err != cudaSuccess) {
-            printf("===cudaMemcpy d_kernel: %s\n", cudaGetErrorString(err));
-        }
-    }else if( c.mType == MemType::SHARED_CONST){
-        uploadKernelToConstant(kernel.kdata.data(),c.kSize*c.kSize*sizeof(float));
-    }
-
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
-
     // warm-up
     for (int i = 0; i < WARMUP; ++i) {
-        launchConvSingleStream(dIn, dOut, c.width, c.height,c.kSize, c.filter, c.mType, d_kernel);
+        launchConvSingleStream(dIn.data(), dOut.data(), c.width, c.height,c.kSize, c.filter, c.mType, d_kernel.data());
     }
     cudaDeviceSynchronize();
-    GpuTimer timer;
+    cuda_stream stream;
     timer.tic(stream);
-    // if (c.pipeline == PipelineType::SINGLE_STREAM) {
+    if (c.pipeline == PipelineType::SINGLE_STREAM) {
         for (int i = 0; i < ITERS; ++i) {
-            launchConvSingleStream(dIn, dOut, c.width, c.height,c.kSize, c.filter, c.mType, d_kernel);
+            launchConvSingleStream(dIn.data(), dOut.data(), c.width, c.height,c.kSize, c.filter, c.mType,  d_kernel.data());
         }
-    // } else {
-    //     // triple-buffer 通常按帧算，这里简化成 ITERS 帧
-    //     std::vector<float> hIn(c.width * c.height);
-    //     std::vector<float> hOut(c.width * c.height);
-    //     launchConvTripleBuffer(hIn.data(), hOut.data(),c.width, c.height, c.kSize,c.filter, c.mType, ITERS);
-    // }
+    } else {
+        // triple-buffer 通常按帧算，这里简化成 ITERS 帧
+        std::vector<float> hIn(c.width * c.height);
+        std::vector<float> hOut(c.width * c.height);
+        launchConvTripleBuffer(hIn.data(), hOut.data(),c.width, c.height, c.kSize,c.filter, c.mType, ITERS);
+    }
     float totalMs = timer.toc(stream);
     float avgKernelMs = totalMs / ITERS;
     float gpixel =(float)(c.width * c.height) /(avgKernelMs * 1e-3f) / 1e9f;
-    cudaFree(dIn);
-    cudaFree(dOut);
-    cudaFree(d_kernel);
-    cudaStreamDestroy(stream);
-
     return { avgKernelMs, gpixel };
 }

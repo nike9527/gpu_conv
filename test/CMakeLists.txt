@@ -11,7 +11,6 @@ enable_testing()
 # ENABLE_INTEGRATION_TESTS  是否开启集成测试
 # ENABLE_BENCHMARKS         是否开启基准测试
 #---------------------------------------------
-option(ENABLE_GPU_TESTS        "Build unit tests(GPU)"      ON)
 option(ENABLE_UNIT_TESTS        "Build unit tests"          ON)
 option(ENABLE_INTEGRATION_TESTS "Build integration tests"   OFF)
 option(ENABLE_BENCHMARKS        "Build benchmarks"          ON)

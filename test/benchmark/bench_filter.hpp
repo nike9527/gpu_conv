@@ -1,5 +1,4 @@
 ﻿#include "convolution_kernel.cuh"
-#include "kernel.hpp"
 #include <cuda_runtime.h>
 #include <iostream>
 

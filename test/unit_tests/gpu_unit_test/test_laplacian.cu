@@ -2,7 +2,7 @@
 #include <chrono>
 #include "convolution_gpu.hpp"
 #include "convolution_cpu.hpp"
-#include "kernel.hpp"
+#include "filter.hpp"
 
 
 TEST(Laplacian, Edge) {

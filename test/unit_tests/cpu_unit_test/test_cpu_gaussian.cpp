@@ -1,8 +1,7 @@
 ﻿#include <chrono>
 #include <gtest/gtest.h>
 #include <random>
-#include "convolution_cpu.hpp"
-#include "kernel.hpp"
+#include "filter.hpp"
 #include <iomanip> 
 
 /**

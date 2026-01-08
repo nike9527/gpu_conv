@@ -2,7 +2,7 @@
 #include <chrono>
 #include "convolution_gpu.hpp"
 #include "convolution_cpu.hpp"
-#include "kernel.hpp"
+#include "filter.hpp"
 
 TEST(Gaussian, Basic_32x32) {
     int w = 32, h = 32, n = w * h;

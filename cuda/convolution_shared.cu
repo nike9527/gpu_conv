@@ -4,7 +4,7 @@
 //=========================================共享内存+常量内存===============================================
 #include <cstdio>
 // 卷积核放入常量内存（最快）
-extern __constant__ float constkernel[4096];
+__constant__ float constkernel[4096];
 __constant__ float c_sobel_dx[3] = {-1, 0, 1};
 __constant__ float c_sobel_sm[3] = { 1, 2, 1};
 #include <cuda_runtime.h>
@@ -87,8 +87,6 @@ __global__ void gaussianConvolutionWithShared(const float* __restrict__ input, f
         output[y * width + x] = sum;
     }
 }
-
-
 /**
  * @brief sobel算子 X方向
  * @param input 输入数据
@@ -133,8 +131,6 @@ __global__ void sobelXConvolutionWithShared(const float* __restrict__ input,floa
         output[y * width + x] = sum;
     }
 }
-
-
 /**
  * @brief sobel算子 Y方向
  * @param input 输入数据

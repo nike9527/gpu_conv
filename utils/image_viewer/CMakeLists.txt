@@ -10,7 +10,7 @@ set(SDL3_IMAGE_DIR "${CMAKE_SOURCE_DIR}/external/SDL3_image")
 #-----------------------------------
 add_library(image_viewer STATIC 
     src/image_viewer.cpp
-)
+) 
 target_include_directories(image_viewer
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include

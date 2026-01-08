@@ -17,14 +17,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #--------------------------
 # Options
 # BUILD_SAMPLES：     是否编译生成可执行文件
-# BUILD_SAMPLES：     是否使用OPENMP
+# USE_OPENMP          是否使用OPENMP
 # BUILD_TESTS         测试用例
 # BUILD_IMAGE_VIEWER：图片查看器工具
+# BUILD_IMAGE_CODEC   编解码工具
 #--------------------------
 option(BUILD_SAMPLES "Build sample executables" ON)
 option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
 option(BUILD_TESTS "Build the Test case " ON)
 option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
+option(BUILD_IMAGE_CODEC  "Build the image decode/encode tool" ON)
 #--------------------------
 # CUDA
 #--------------------------
@@ -59,13 +61,16 @@ endif()
 # gconv库
 #--------------------------
 add_library(gconv STATIC
-    src/image.cpp
-    src/kernel.cpp
-    src/convolution_cpu.cpp
-    cuda/convolution_gpu.cu
+    src/filters/filter.cpp
+    src/kernels/kernel_filter.cu
+    src/kernels/kernel_gaussian.cu
+    src/kernels/kernel_laplacian.cu
+    src/kernels/kernel_meanBlur.cu
+    src/kernels/kernel_sharpen.cu
+    src/kernels/kernel_sobel.cu
     cuda/convolution_global.cu
     cuda/convolution_shared.cu
-    
+    cuda/cuda_utils.cu
 )
 # set_target_properties(gconv PROPERTIES
 #     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
@@ -99,7 +104,15 @@ if(USE_OPENMP)
     target_link_libraries(gconv PUBLIC OpenMP::OpenMP_CXX)
   endif()
 endif()
-
+#--------------------------
+# image_codec  图片编解码
+#--------------------------
+if(BUILD_IMAGE_CODEC)
+  set(IMAGE_CODEC_DIR "${CMAKE_SOURCE_DIR}/utils/image_codec")
+  if(EXISTS "${IMAGE_CODEC_DIR}/CMakeLists.txt")
+      add_subdirectory("${IMAGE_CODEC_DIR}")
+    endif()
+endif()
 #--------------------------
 # SDL3 和 SDL3_image 图片查看器
 #--------------------------
