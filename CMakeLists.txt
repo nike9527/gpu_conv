@@ -24,7 +24,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #--------------------------
 option(BUILD_SAMPLES "Build sample executables" ON)
 option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
-option(BUILD_TESTS "Build the Test case " ON)
+option(BUILD_TESTS "Build the Test case " OFF)
 option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
 option(BUILD_IMAGE_CODEC  "Build the image decode/encode tool" ON)
 #--------------------------
@@ -62,15 +62,15 @@ endif()
 #--------------------------
 add_library(gconv STATIC
     src/filters/filter.cpp
-    src/kernels/kernel_filter.cu
-    src/kernels/kernel_gaussian.cu
-    src/kernels/kernel_laplacian.cu
-    src/kernels/kernel_meanBlur.cu
-    src/kernels/kernel_sharpen.cu
-    src/kernels/kernel_sobel.cu
-    cuda/convolution_global.cu
-    cuda/convolution_shared.cu
-    cuda/cuda_utils.cu
+    src/conv/conv_gpu.cpp
+    src/conv/conv_cpu.cpp
+    src/kernels/cuda_utils.cu
+    src/kernels/kernels_filter.cu
+    src/kernels/kernels_gaussian.cu
+    src/kernels/kernels_laplacian.cu
+    src/kernels/kernels_mean.cu
+    src/kernels/kernels_sharpen.cu
+    src/kernels/kernels_sobel.cu
 )
 # set_target_properties(gconv PROPERTIES
 #     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
