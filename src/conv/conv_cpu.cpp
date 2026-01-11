@@ -63,34 +63,18 @@ namespace cpu_conv
         int radius = obj.radius;
         int ksize = obj.size;
 #pragma omp parallel for
-        for (int y = 0; y < h; ++y)
+        for (int y = 0; y < h; y++)
         {
-            for (int x = 0; x < w; ++x)
+            for (int x = 0; x < w; x++)
             {
                 float sum = 0.0f;
-                for (int ky = -radius; ky <= radius; ++ky)
+                for (int ky = -radius; ky <= radius; ky++)
                 {
-                    // 使用镜像边界
-                    int iy = y + ky;
-                    // 镜像处理
-                    // if (iy < 0) iy = -iy;
-                    // else if (iy >= h) iy = h - 1;
-                    if (iy < 0)
-                        iy = -iy - 1; // 镜像：0 → -1 → 0, -1 → -2 → 1
-                    else if (iy >= h)
-                        iy = 2 * h - iy - 1; // 镜像：h → h-1, h+1 → h-2
-                    for (int kx = -radius; kx <= radius; ++kx)
+                    for (int kx = -radius; kx <= radius; kx++)
                     {
-                        // 使用镜像边界
-                        int ix = x + kx;
-                        // 镜像处理
-                        // if (ix < 0) ix = -ix;
-                        // else if (ix >= w) ix = w - 1;
-                        if (ix < 0)
-                            ix = -ix - 1;
-                        else if (ix >= w)
-                            ix = 2 * w - ix - 1;
-                        sum += in[iy * w + ix] * obj.kdata[(ky + radius) * ksize + (kx + radius)];
+                        int ix = std::min(std::max(x + kx, 0), w - 1);
+                        int iy = std::min(std::max(y + ky, 0), h - 1);
+                        sum += in[iy * w + ix] * obj.kdata[(ky + radius) * obj.size + (kx + radius)];
                     }
                 }
                 out[y * w + x] = sum;

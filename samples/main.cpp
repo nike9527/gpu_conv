@@ -10,6 +10,6 @@
 
 int main(int argc, char *argv[])
 {
-    gconv::gaussianAction();
+    gconv::sobelAction();
     return 0;
 }

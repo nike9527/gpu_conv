@@ -7,7 +7,7 @@ __global__ void laplacianConvolutionGlobal(const float *__restrict__ input, floa
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
-    int radius = kSize / 2;
+    int radius = kSize >> 1;
     if (x >= width || y >= height)
         return;
     float sum = 0.0f;
@@ -36,7 +36,7 @@ __global__ void laplacianConvolutionGlobal(const float *__restrict__ input, floa
 __global__ void laplacianConvolutionShared(const float *__restrict__ input, float *__restrict__ output,
                                            const int width, const int height, const int kSize)
 {
-    const int radius = kSize >> 2;
+    const int radius = kSize >> 1;
      // 共享内存：输入tile + 水平卷积结果
     extern __shared__ float tile[];
     //全局坐标

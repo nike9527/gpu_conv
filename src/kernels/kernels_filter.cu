@@ -8,7 +8,7 @@ __global__ void conv2dKernelGlobal(const float *__restrict__ input, float *__res
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     if (x >= width || y >= height)
         return;
-    int radius = kSize / 2;
+    int radius = kSize >> 1;
     float sum = 0.0f;
     for (int ky = -radius; ky <= radius; ky++)
     {
@@ -25,7 +25,7 @@ __global__ void conv2dKernelGlobal(const float *__restrict__ input, float *__res
 __global__ void conv2dKernelShared(const float *__restrict__ input, float *__restrict__ output,
                                    const int width, const int height, const int kSize)
 {
-    int radius = kSize / 2;
+    int radius = kSize >> 1;
     extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;

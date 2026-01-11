@@ -30,10 +30,10 @@ namespace gconv
         Image imgData = Image::imageLoadGray(srcPaht);
         Image out(imgData.width, imgData.height);
         imgData.imageSaveToGray(destPaht1);
-        filter filter = filter::gaussian2D(5, 5.0f);
+        // filter filter = filter::gaussian2D(5, 5.0f);
         // filter filter = filter::sharpen();
         // filter filter = filter::meanBlur(9);
-        // filter filter = filter::laplacian();
+        filter filter = filter::laplacian();
         //================CPU进行卷积计算=====================
         auto t1 = std::chrono::high_resolution_clock::now();
         cpu_conv::conv2dKernel(imgData.data.data(), out.data.data(), imgData.width, imgData.height, filter);
@@ -65,18 +65,17 @@ namespace gconv
         Image imgData = Image::imageLoadGray(srcPaht);
         Image out(imgData.width, imgData.height);
         imgData.imageSaveToGray(destPaht1);
-        filter filter = filter::gaussian2D(3, .5f);
         //================CPU进行高斯计算=====================
         auto t1 = std::chrono::high_resolution_clock::now();
-        cpu_conv::gaussianBlur2D(imgData.data.data(), out.data.data(), imgData.width, imgData.height, 3, 5.f);
+        cpu_conv::gaussianBlur2D(imgData.data.data(), out.data.data(), imgData.width, imgData.height, 7, 5.f);
         auto t2 = std::chrono::high_resolution_clock::now();
         std::cout << "CPU time: " << std::chrono::duration<double, std::milli>(t2 - t1).count() << " ms\n";
         out.imageSaveToFile(destPaht2);
         //================GPU进行高斯计算-全局内存=====================
-        gpu_conv::gaussianBlur(imgData.data.data(), out.data.data(), imgData.width, imgData.height, mem_type::GLOBAL, 3, 5.f);
+        gpu_conv::gaussianBlur(imgData.data.data(), out.data.data(), imgData.width, imgData.height, mem_type::GLOBAL, 7, 5.f);
         out.imageSaveToFile(destPaht3);
         //================GPU进行高斯计算-共享内存=====================
-        gpu_conv::gaussianBlur(imgData.data.data(), out.data.data(), imgData.width, imgData.height, mem_type::SHAREDCONST, 3, 5.f);
+        gpu_conv::gaussianBlur(imgData.data.data(), out.data.data(), imgData.width, imgData.height, mem_type::SHAREDCONST, 7, 5.f);
         out.imageSaveToFile(destPaht4);
         renderImage(std::vector<std::string>{destPaht1, destPaht2, destPaht3, destPaht4}, imgData.width, imgData.height);
         return true;

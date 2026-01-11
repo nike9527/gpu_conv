@@ -49,7 +49,7 @@ __global__ void sobelConvolutionGlobal(const float *__restrict__ input, float *_
 
 __global__ void sobelConvolutionShared(const float *__restrict__ input, float *__restrict__ output, int width, int height, int ksize)
 {
-    int radius = ksize / 2;
+    int radius = ksize >> 1;
     extern __shared__ float smem[];
     int tx = threadIdx.x;
     int ty = threadIdx.y;

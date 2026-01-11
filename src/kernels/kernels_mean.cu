@@ -8,7 +8,7 @@ __global__ void meanBlurConvolutionGlobal(const float *__restrict__ input, float
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
-    int radius = kSize / 2;
+    int radius = kSize >> 1;
     if (x >= width || y >= height)
         return;
     float sum = 0.0f;
@@ -38,7 +38,7 @@ __global__ void meanBlurConvolutionGlobal(const float *__restrict__ input, float
 __global__ void meanBlurConvolutionShared(const float *__restrict__ input, float *__restrict__ output,
                                           const int width, const int height, const int kSize)
 {
-    int radius = kSize / 2;
+    int radius = kSize >> 1;
     extern __shared__ float tile[];
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
