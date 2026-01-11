@@ -6,4 +6,5 @@ image/
 gitCode_token.txt
 *.xlsx
 *.xls
+*.txt
 reporter
