@@ -2,12 +2,13 @@
 #include "cuda/cuda_memory.hpp"
 #include "cuda/cuda_stream.hpp"
 #include <vector>
+template <typename T = float>
 class filter_pipeline
 {
 public:
-    cuda_stream stream;         // 专属 stream
-    cuda_memory<float> d_input; // 持久 device buffer
-    cuda_memory<float> d_output;
+    cuda_stream stream;     // 专属 stream
+    cuda_memory<T> d_input; // 持久 device buffer
+    cuda_memory<T> d_output;
 
     int width;
     int height;

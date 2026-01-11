@@ -2,6 +2,13 @@
 #include "stream_buffer.hpp"
 #include "cuda/cuda_memory.hpp"
 template <typename T, int N = 3>
+/**
+ * @brief
+ “已完成但仍占用”
+CUDA event 只保证 GPU 不再使用 buffer
+buffer 是否能复用，取决于系统是否还需要它
+ *
+ */
 class triple_pipeline
 {
 public:
@@ -25,101 +32,123 @@ private:
     stream_buffer<T> buffers_[N];
     int write_idx_ = 0;
     int read_idx_ = 0;
+    // 执行中的数量
     int inflight_ = 0;
 };
-
+/**
+ * @brief 优先返回 FREE buffer
+ *
+ * @return template <typename T, int N>&
+for each buffer:
+    if !busy → return
+if none:
+    wait any event → free → return
+*/
+// TODO
 template <typename T, int N>
 stream_buffer<T> &triple_pipeline<T, N>::acquire()
 {
     // 1. 先尝试找到一个空闲 buffer
     for (int i = 0; i < N; ++i)
     {
-        int idx = (write_idx_ + i) % N;
-        if (!buffers_[idx].busy())
+        auto &buf = buffers_[write_idx_];
+        if (buf.is_free())
         {
             write_idx_ = (idx + 1) % N;
-            return buffers_[idx];
+            return buf;
         }
         // GPU 已完成，回收
-        if (cudaEventQuery(buffers_[idx].event()) == cudaSuccess)
-        {
-            buffers_[idx].mark_free();
-            inflight_--;
-            write_idx_ = (idx + 1) % N;
-            return buffers_[idx];
-        }
+        // if (cudaEventQuery(buffers_[idx].event()) == cudaSuccess)
+        // {
+        //     buffers_[idx].mark_free();
+        //     inflight_--;
+        //     write_idx_ = (idx + 1) % N;
+        //     return buffers_[idx];
+        // }
+        write_idx_ = (write_idx_ + 1) % N;
     }
 
-    // 2. 全部 busy，等待最早完成的那个（通常是 read_idx_）
-    auto &buf = buffers_[read_idx_];
+    // // 2. 全部 busy，等待最早完成的那个（通常是 read_idx_）
+    // auto &buf = buffers_[read_idx_];
 
-    CUDA_CHECK(cudaEventSynchronize(buf.event()));
-    buf.mark_free();
-    inflight_--;
+    // CUDA_CHECK(cudaEventSynchronize(buf.event()));
+    // buf.mark_free();
+    // inflight_--;
 
-    write_idx_ = (read_idx_ + 1) % N;
-    return buf;
+    // write_idx_ = (read_idx_ + 1) % N;
+    // return buf;
+    //=========================上面注释调整到下面================================
+    // 没有 FREE buffer：必须等待一个 COMPLETED 被 release
+    // 这里可以选择阻塞 / spin / yield
+    throw std::runtime_error("no free buffer available");
 }
 
 template <typename T, int N>
 void triple_pipeline<T, N>::submit(stream_buffer<T> &buf)
 {
+    // 必须是空闲 buffer
+    // assert(!buf.busy());
+    // CUDA_CHECK(cudaEventRecord(buf.event(), buf.stream()));
+    // buf.mark_busy();
+    // inflight_++;
+    //=========================上面注释调整到下面================================
     CUDA_CHECK(cudaEventRecord(buf.event(), buf.stream()));
-    buf.mark_busy();
-    inflight_++;
+    buf.mark_inflight();
 }
+// 支持乱序完成
+/**
+ * @brief
+ *
+ * @tparam T
+ * @tparam N
+ * @return stream_buffer<T>*
+ for each buffer:
+    if busy && event ready → return
+ */
+// TODO
 template <typename T, int N>
 stream_buffer<T> *triple_pipeline<T, N>::try_fetch()
 {
+    // for (int i = 0; i < N; ++i)
+    // {
+    //     auto &buf = buffers_[read_idx_];
+    //     if (!buf.busy())
+    //         continue;
+    //     auto err = cudaEventQuery(buf.event());
+    //     if (err == cudaErrorNotReady)
+    //         continue;
+    //     CUDA_CHECK(err);
+    //     return &buf;
+    // }
+    //=========================上面注释调整到下面================================
     for (int i = 0; i < N; ++i)
     {
-        auto &buf = buffers_[i];
-        if (!buf.busy())
-            continue;
+        auto &buf = buffers_[read_idx_];
 
-        if (cudaEventQuery(buf.event()) == cudaSuccess)
+        if (buf.is_inflight())
         {
-            buf.mark_free();
-            inflight_--;
-            read_idx_ = (idx + 1) % N;
-            return &buf;
+            if (cudaEventQuery(buf.event()) == cudaSuccess)
+            {
+                buf.mark_completed();
+                read_idx_ = (read_idx_ + 1) % N;
+                return &buf;
+            }
         }
-    }
 
+        read_idx_ = (read_idx_ + 1) % N;
+    }
     return nullptr;
 }
 
 template <typename T, int N>
 void triple_pipeline<T, N>::release(stream_buffer<T> &buf)
 {
-    assert(buf.busy());
+    // assert(buf.busy());
+    // buf.mark_free();
+    // inflight_--;
+    //=========================上面注释调整到下面================================
+    if (!buf.is_completed())
+        throw std::logic_error("release non-completed buffer");
+
     buf.mark_free();
-    inflight_--;
 }
-/**
- * @brief
- *
- *
- *
- *
- pipeline<float> pipe(W * H);
- auto& buf = pipeline.acquire();
-
-std::memcpy(buf.h_in(), input, bytes);
-
-cudaMemcpyAsync(buf.d_in(), buf.h_in(), bytes,
-                cudaMemcpyHostToDevice, buf.stream());
-
-launch_kernel<<<grid, block, 0, buf.stream()>>>(
-    buf.d_in(), buf.d_out());
-
-cudaMemcpyAsync(buf.h_out(), buf.d_out(), bytes,
-                cudaMemcpyDeviceToHost, buf.stream());
-
-pipeline.submit(buf);
-拉取结果（非阻塞）
-if (auto* done = pipeline.try_fetch()) {
-    consume(done->h_out());
-}
- *
- */

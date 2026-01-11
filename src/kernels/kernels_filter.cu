@@ -1,6 +1,7 @@
 #include "kernels/kernels.cuh"
 #include "cuda/cuda_memory.hpp"
 #include "filters/filter.hpp"
+
 __global__ void conv2dKernelGlobal(const float *__restrict__ input, float *__restrict__ output,
                                    const int width, const int height, const float *const kernel, const int kSize)
 {
@@ -88,7 +89,7 @@ void launchFilter(filter_pipeline &pipe, const float *in, float *out, mem_type t
         // cudaEventSynchronize(stop);// 等待事件完成
     }
     CHECK_KERNEL_ERROR();
-    // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
+    //std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     pipe.d_output.copy_to_host_async(out, width * height, pipe.stream.get());
     return;
 }

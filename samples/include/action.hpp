@@ -81,6 +81,11 @@ namespace gconv
      * @return false
      */
     bool laplacianAction();
-
-    bool pipeline();
+    /**
+     * @brief pipeline
+     *
+     * @return true
+     * @return false
+     */
+    bool pipelineAction();
 }

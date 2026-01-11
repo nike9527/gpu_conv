@@ -1,16 +1,14 @@
-﻿#include "core/gpu_timer.hpp"
+#include "core/gpu_timer.hpp"
 #include "cuda/cuda_memory.hpp"
 #include "bench_types.hpp"
 #include "bench_config.hpp"
 #include "bench_filter.hpp"
+#include "convolution_kernel.cuh"
 #include "core/triple_pipeline.hpp"
 #include <vector>
 #include <numeric>
-#include <chrono>
 
 extern cudaError_t memCpyConstant(const float *hostKernel, int kernelSize);
-constexpr int PIPE_N = 3;
-triple_pipeline<float, PIPE_N> pipeline(width *height);
 // ====== 你需要对接的接口（自己实现） ======
 void launchConvSingleStream(const float *d_in, float *d_out, int width, int height, int kSize, filter_type filter_type, mem_type mtype, float *d_kernel, int block_w = 16, int block_h = 16)
 {
@@ -92,69 +90,22 @@ void launchConvSingleStream(const float *d_in, float *d_out, int width, int heig
     }
 }
 
-/**
- * @brief Triple pipeline测试
- *  Triple vs Triple 差距 ≥ 1.3× 才是正常的（PCIe + kernel overlap）
- * @param hIn
- * @param hOut
- * @param w
- * @param h
- * @param kSize
- * @param filter
- * @param mtype
- * @param iters
- */
 void launchConvTripleBuffer(const float *hIn, float *hOut, int w, int h, int kSize, filter_type filter, mem_type mtype, int iters)
 {
-    auto t0 = std::chrono::high_resolution_clock::now();
-    for (int frame = 0; frame < num_frames; ++frame)
-    {
-        // === Producer ===
-        auto &buf = pipeline.acquire();
+    triple_pipeline<float> pipe(w * h);
+    auto &buf = pipe.acquire();
+    int bytes = w * h * sizeof(float);
+    std::memcpy(buf.h_in(), hIn, bytes);
+    cudaMemcpyAsync(buf.d_in(), buf.h_in(), bytes, cudaMemcpyHostToDevice, buf.stream());
+    dim3 block(16, 16);
+    dim3 grid((w + block.x - 1) / block.x, (h + block.y - 1) / block.y);
+    int shraedSize = (block.x + (2 * kSize / 2)) * (block.y + (2 * kSize / 2)) * sizeof(float);
+    sharpenConvolutionWithShared<<<grid, block, shraedSize, buf.stream()>>>(buf.d_in(), buf.d_out(), w, h, kSize);
+    cudaMemcpyAsync(buf.h_out(), buf.d_out(), bytes, cudaMemcpyDeviceToHost, buf.stream());
 
-        // 填 host input
-        fill_input(buf.h_in(), width, height, frame);
-
-        // 异步 H2D
-        cudaMemcpyAsync(
-            buf.d_in(), buf.h_in(),
-            bytes,
-            cudaMemcpyHostToDevice,
-            buf.stream());
-
-        // kernel
-        launch_conv_kernel(
-            buf.d_in(), buf.d_out(),
-            width, height, ksize,
-            buf.stream());
-
-        // 异步 D2H
-        cudaMemcpyAsync(
-            buf.h_out(), buf.d_out(),
-            bytes,
-            cudaMemcpyDeviceToHost,
-            buf.stream());
-
-        pipeline.submit(buf);
-
-        // === Consumer（非阻塞）===
-        while (auto *done = pipeline.try_fetch())
-        {
-            consume_output(done->h_out(), width, height);
-            pipeline.release(*done);
-        }
-    }
-    // drain
-    while (pipeline.inflight() > 0)
-    {
-        if (auto *done = pipeline.try_fetch())
-        {
-            consume_output(done->h_out(), width, height);
-            pipeline.release(*done);
-        }
-    }
-    cudaDeviceSynchronize();
-    auto t1 = std::chrono::high_resolution_clock::now();
+    pipe.submit(buf);
+    auto *done = pipe.try_fetch();
+    // done->h_out();
 }
 // ===========================================
 
@@ -194,9 +145,68 @@ BenchResult runBenchmark(const BenchCase &c)
     else
     {
         // triple-buffer 通常按帧算，这里简化成 ITERS 帧
-        std::vector<float> hIn(c.width * c.height);
-        std::vector<float> hOut(c.width * c.height);
-        launchConvTripleBuffer(hIn.data(), hOut.data(), c.width, c.height, c.kSize, c.filter, c.mType, ITERS);
+        // std::vector<float> hIn(c.width * c.height);
+        // std::vector<float> hOut(c.width * c.height);
+        // launchConvTripleBuffer(hIn.data(), hOut.data(),c.width, c.height, c.kSize,c.filter, c.mType, ITERS);
+
+        // ===== 正确的 triple-pipeline benchmark =====
+        /**
+         * @brief
+         * 1 Nsight Systems
+         *      多 stream overlap 是否存在
+         *   2 人为加大 H2D / D2H
+         *      triple pipeline 吞吐是否高于 single
+         *   3 把 N=2 / 3 / 4
+         *       stall 点是否按预期变化
+         *
+         */
+        const size_t elems = c.width * c.height;
+        const size_t bytes = elems * sizeof(float);
+        std::vector<float> hIn(elems);
+        std::vector<float> hOut(elems);
+        triple_pipeline<float> pipe(elems);
+        int submitted = 0;
+        int completed = 0;
+        dim3 block(16, 16);
+        dim3 grid((c.width + block.x - 1) / block.x,
+                  (c.height + block.y - 1) / block.y);
+        int sharedSize =
+            (block.x + (2 * c.kSize / 2)) *
+            (block.y + (2 * c.kSize / 2)) *
+            sizeof(float);
+        while (completed < ITERS)
+        {
+            // ---- submit stage ----
+            if (submitted < ITERS)
+            {
+                /**
+                 * @brief  stage 可以自然扩展成多段
+                 *
+                 * std::vector<pipeline_stage<float>*> stages = {&stage1,&stage2,&stage3};
+
+                    for (auto* s : stages)
+                        s->enqueue(buf);
+                 *
+                 */
+                sharpen_stage sharpen(c.width, c.height, c.kSize);
+                auto &buf = pipe.acquire();
+                std::memcpy(buf.h_in(), hIn.data(), bytes);
+                cudaMemcpyAsync(buf.d_in(), buf.h_in(), bytes,
+                                cudaMemcpyHostToDevice, buf.stream());
+                // sharpenConvolutionWithShared<<<grid, block, sharedSize, buf.stream()>>>( buf.d_in(), buf.d_out(), c.width, c.height, c.kSize);
+                sharpen.enqueue(buf);
+                cudaMemcpyAsync(buf.h_out(), buf.d_out(), bytes,
+                                cudaMemcpyDeviceToHost, buf.stream());
+                pipe.submit(buf);
+                ++submitted;
+            }
+            // ---- fetch stage ----
+            if (auto *done = pipe.try_fetch())
+            {
+                std::memcpy(hOut.data(), done->h_out(), bytes);
+                ++completed;
+            }
+        }
     }
     float totalMs = timer.toc(stream);
     float avgKernelMs = totalMs / ITERS;

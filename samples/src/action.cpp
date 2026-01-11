@@ -238,29 +238,200 @@ namespace gconv
         renderImage(std::vector<std::string>{destPaht1, destPaht2, destPaht3, destPaht4}, imgData.width, imgData.height);
         return true;
     }
-    bool conv2dWithAsync()
+    // bool pipelineAction()
+    // {
+    //     // std::string srcPaht = "D:/C++/gpu_conv/image/lena.png";
+    //     // std::string destPaht1 = "D:/C++/gpu_conv/image/lenaGary.png";
+    //     // std::string destPaht2 = "D:/C++/gpu_conv/image/lenaCPU.png";
+    //     // std::string destPaht3 = "D:/C++/gpu_conv/image/lenaGPU_global.png";
+    //     // std::string destPaht4 = "D:/C++/gpu_conv/image/lenaGPU_shared.png";
+    //     // Image imgData = Image::imageLoadGray(srcPaht);
+    //     // Image out(imgData.width, imgData.height);
+    //     // imgData.imageSaveToGray(destPaht1);
+    //     // //================GPU进行计算-共享内存=====================
+    //     // filter_pipeline pipe(imgData.width, imgData.height, cudaStreamNonBlocking);
+    //     // gpu_conv::launchFilterAsync(pipe, imgData.data.data(), out.data.data(), imgData.width, imgData.height, filter_type::GAUSSIAN);
+    //     // out.imageSaveToFile(destPaht4);
+    //     // renderImage(std::vector<std::string>{destPaht1, destPaht2, destPaht3, destPaht4}, imgData.width, imgData.height);
+    //     // pipe.stream.synchronize();
+
+    //     std::string srcPaht1 = "D:/C++/gpu_conv/image/lena.png";
+    //     std::string srcPaht2 = "D:/C++/gpu_conv/image/16.png";
+    //     std::string srcPaht3 = "D:/C++/gpu_conv/image/17.png";
+    //     std::string destPaht1 = "D:/C++/gpu_conv/image/lenaGPU_shared.png";
+    //     std::string destPaht2 = "D:/C++/gpu_conv/image/16GPU_shared.png";
+    //     std::string destPaht3 = "D:/C++/gpu_conv/image/17GPU_shared.png";
+    //     std::vector<std::string> path{
+    //         destPaht1,
+    //         destPaht2,
+    //         destPaht3};
+    //     std::vector<std::string> src{
+    //         srcPaht1,
+    //         srcPaht2,
+    //         srcPaht3};
+    //     //================GPU进行计算-共享内存=====================
+    //     filter_pipeline pipe(512, 512, cudaStreamNonBlocking);
+    //     for (int frame = 0; frame < 3; ++frame)
+    //     {
+    //         Image imgData = Image::imageLoadGray(src[frame]);
+    //         Image out(512, 512);
+    //         gpu_conv::launchFilterAsync(pipe, imgData.data.data(), out.data.data(), pipe.width, pipe.height, filter_type::GAUSSIAN);
+    //         out.imageSaveToFile(path[frame]);
+    //     }
+    //     renderImage(path, 800, 800);
+    //     pipe.stream.synchronize();
+    //     return true;
+    // }
+
+    // bool pipelineAction()
+    // {
+    //     std::string srcPaht1 = "D:/C++/gpu_conv/image/lena.png";
+    //     std::string srcPaht2 = "D:/C++/gpu_conv/image/16.png";
+    //     std::string srcPaht3 = "D:/C++/gpu_conv/image/17.png";
+    //     std::string destPaht1 = "D:/C++/gpu_conv/image/lenaGPU_shared.png";
+    //     std::string destPaht2 = "D:/C++/gpu_conv/image/16GPU_shared.png";
+    //     std::string destPaht3 = "D:/C++/gpu_conv/image/17GPU_shared.png";
+
+    //     std::vector<std::string> src_paths = {srcPaht1, srcPaht2, srcPaht3};
+    //     std::vector<std::string> dest_paths = {destPaht1, destPaht2, destPaht3};
+
+    //     filter_pipeline pipe(800, 800, cudaStreamDefault);
+
+    //     for (size_t frame = 0; frame < src_paths.size(); ++frame)
+    //     {
+    //         // 1. 加载输入图像
+    //         Image input_img = Image::imageLoadGray(src_paths[frame]);
+
+    //         // 2. 准备输出图像（同样大小）
+    //         Image output_img(input_img.width, input_img.height);
+
+    //         // 3. 启动GPU滤波（同步版本，或异步+立即同步）
+    //         gpu_conv::launchFilterAsync(pipe,
+    //                                     input_img.data.data(),
+    //                                     output_img.data.data(),
+    //                                     input_img.width,
+    //                                     input_img.height,
+    //                                     filter_type::GAUSSIAN);
+
+    //         // 4. 保存处理后的图像
+    //         output_img.imageSaveToFile(dest_paths[frame]);
+
+    //         std::cout << "Processed frame " << frame << ": " << src_paths[frame] << " -> " << dest_paths[frame] << std::endl;
+    //     }
+
+    //     // 渲染所有处理后的图像
+    //     renderImage(dest_paths, 800, 800);
+
+    //     return true;
+    // }
+
+    bool pipelineAction()
     {
-        // std::vector<std::string> srcPaht{"D:/C++/gpu_conv/image/lena.png","D:/C++/gpu_conv/image/16.png","D:/C++/gpu_conv/image/17.png"};
-        // // std::vector<std::string> srcPaht{"D:/C++/gpu_conv/image/lenaGary.png","D:/C++/gpu_conv/image/lenaGPU_global.png","D:/C++/gpu_conv/image/lenaGPU_shared.png"};
-        // std::vector<std::string> ourPaht{"D:/C++/gpu_conv/image/lena_2.png","D:/C++/gpu_conv/image/16_2.png","D:/C++/gpu_conv/image/17_2.png"};
-        // std::vector<Image> inImg;
-        // std::vector<Image> outImg;
-        // for(std::string& path : srcPaht){
-        //     Image imgData = Image::imageLoadGray(path);
-        //     inImg.emplace_back(imgData);
-        //     outImg.emplace_back(Image{imgData.width, imgData.height});
-        // }
-        // filter filter = filter::laplacian();
-        // // filter filter = filter::gaussian(7,5.0);
-        // // filter filter = filter::sharpen();
-        // // filter filter = filter::meanBlur(7);
-        // // filter filter = filter::laplacian();
-        // conv2dWithAsyncGPU(inImg,outImg,filter.size,filter.kdata.data());
-        // for(int i = 0; i< ourPaht.size(); i++){
-        //     outImg[i].imageSaveToGray(ourPaht[i]);
-        // }
-        // renderImage(ourPaht,800,600);
+        std::string srcPaht1 = "D:/C++/gpu_conv/image/lena.png";
+        std::string srcPaht2 = "D:/C++/gpu_conv/image/16.png";
+        std::string srcPaht3 = "D:/C++/gpu_conv/image/17.png";
+        std::string destPaht1 = "D:/C++/gpu_conv/image/lenaGPU_shared.png";
+        std::string destPaht2 = "D:/C++/gpu_conv/image/16GPU_shared.png";
+        std::string destPaht3 = "D:/C++/gpu_conv/image/17GPU_shared.png";
+
+        std::vector<std::string> src_paths = {srcPaht1, srcPaht2, srcPaht3};
+        std::vector<std::string> dest_paths = {destPaht1, destPaht2, destPaht3};
+
+        // 1. 预加载所有输入图像（CPU，可以并行）
+        std::vector<Image> input_images;
+        for (const auto &path : src_paths)
+        {
+            input_images.push_back(Image::imageLoadGray(path));
+        }
+
+        // 2. 准备输出图像容器
+        std::vector<Image> output_images;
+        for (const auto &img : input_images)
+        {
+            output_images.emplace_back(img.width, img.height);
+        }
+
+        // 3. 创建多个流用于真正的异步流水线
+        const int num_streams = 2; // 根据GPU能力调整
+        std::vector<filter_pipeline> pipes;
+        std::vector<cudaStream_t> streams;
+
+        for (int i = 0; i < num_streams; ++i)
+        {
+            cudaStream_t stream;
+            cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
+            streams.push_back(stream);
+            pipes.emplace_back(800, 800, stream);
+        }
+
+        // 4. 异步处理所有帧
+        std::vector<cudaEvent_t> frame_events(src_paths.size());
+        for (size_t i = 0; i < frame_events.size(); ++i)
+        {
+            cudaEventCreate(&frame_events[i]);
+        }
+
+        for (size_t frame = 0; frame < src_paths.size(); ++frame)
+        {
+            int stream_idx = frame % num_streams;
+
+            // 异步启动GPU处理
+            gpu_conv::launchFilterAsync(pipes[stream_idx],
+                                        input_images[frame].data.data(),
+                                        output_images[frame].data.data(),
+                                        input_images[frame].width,
+                                        input_images[frame].height,
+                                        filter_type::GAUSSIAN);
+
+            // 记录事件，标记该帧处理完成
+            cudaEventRecord(frame_events[frame], streams[stream_idx]);
+        }
+
+        // 5. 等待所有帧处理完成
+        for (size_t frame = 0; frame < src_paths.size(); ++frame)
+        {
+            cudaEventSynchronize(frame_events[frame]);
+
+            // 现在可以安全保存
+            output_images[frame].imageSaveToFile(dest_paths[frame]);
+            std::cout << "Saved frame " << frame << ": " << dest_paths[frame] << std::endl;
+
+            cudaEventDestroy(frame_events[frame]);
+        }
+
+        // 6. 清理流
+        for (auto &stream : streams)
+        {
+            cudaStreamDestroy(stream);
+        }
+
+        // 7. 渲染结果
+        renderImage(dest_paths, 800, 800);
+
         return true;
     }
+    /**
+     * @brief
+ FilterPipeline pipe[2] = {
+    {width, height},
+    {width, height}
+};
 
+for (int frame = 0; frame < N; ++frame) {
+    int i = frame & 1;
+
+    launchFilterAsync(
+        pipe[i],
+        input[frame],
+        output[frame],
+        mem_type::SHAREDCONST,
+        filterObj,
+        16, 16
+    );
+}
+
+// 同步最后一帧
+pipe[(N - 1) & 1].stream.synchronize();
+     *
+     */
 } // gconv

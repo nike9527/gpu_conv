@@ -10,6 +10,6 @@
 
 int main(int argc, char *argv[])
 {
-    gconv::sobelAction();
+    gconv::pipelineAction();
     return 0;
 }
