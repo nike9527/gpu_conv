@@ -13,7 +13,7 @@ enable_testing()
 #---------------------------------------------
 option(ENABLE_UNIT_TESTS        "Build unit tests"          ON)
 option(ENABLE_INTEGRATION_TESTS "Build integration tests"   OFF)
-option(ENABLE_BENCHMARKS        "Build benchmarks"          ON)
+option(ENABLE_BENCHMARKS        "Build benchmarks"          OFF)
 
 message(STATUS "  Test config:")
 message(STATUS "  Unit tests        : ${ENABLE_UNIT_TESTS}")

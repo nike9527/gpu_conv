@@ -1,75 +1,156 @@
-把它抽成 FramePipeline<T> 独立模块
-我帮你把 pipeline 接进 gpu_conv benchmark
-写一版 多 stream + CPU producer / consumer 模拟
+cmake_minimum_required(VERSION 3.18)
+project(gpu_conv_lib LANGUAGES C CXX CUDA)
 
-一版 完全无 FIFO 假设的 triple_pipeline 最终形态（工业级）
-多 stream + 不同 kernel 时延的压力测试
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#--------------------------
+# Options
+# BUILD_SAMPLES：     是否编译生成可执行文件
+# USE_OPENMP          是否使用OPENMP
+# BUILD_TESTS         测试用例
+# BUILD_IMAGE_VIEWER：图片查看器工具
+# BUILD_IMAGE_CODEC   编解码工具
+#--------------------------
+option(BUILD_SAMPLES "Build sample executables" ON)
+option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
+option(BUILD_TESTS "Build the Test case " ON)
+option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
+option(BUILD_IMAGE_CODEC  "Build the image decode/encode tool" ON)
+#--------------------------
+# CUDA
+#--------------------------
+find_package(CUDAToolkit REQUIRED)
+set(CMAKE_BUILD_TYPE Debug)
+#--------------------------
+# 配置输出目录
+#--------------------------
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+#--------------------------
+# 自动拷贝 runtime DLL
+#--------------------------
+include(${CMAKE_SOURCE_DIR}/cmake/copy_runtime_dlls.cmake)
+#--------------------------
+# MSVC Runtime (统一 /MD /MDd)
+#--------------------------
+if(MSVC)
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
+# if (MSVC)
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+      # 清除 MSVC_RUNTIME_LIBRARY 的默认值
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  
+    # 或者在更具体的target设置中
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY_DEFAULT "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# endif()
+#--------------------------
+# gconv库
+#--------------------------
+add_library(gconv STATIC
+    src/filters/filter.cpp
+    src/conv/conv_gpu.cpp
+    src/conv/conv_cpu.cpp
+    src/kernels/cuda_utils.cu
+    src/kernels/kernels_filter.cu
+    src/kernels/kernels_gaussian.cu
+    src/kernels/kernels_laplacian.cu
+    src/kernels/kernels_mean.cu
+    src/kernels/kernels_sharpen.cu
+    src/kernels/kernels_sobel.cu
+)
+# set_target_properties(gconv PROPERTIES
+#     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
+# )
 
-stream_buffer 改成 显式 enum state（FREE / INFLIGHT / COMPLETED）
+set_target_properties(gconv PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+target_include_directories(gconv 
+PUBLIC 
+        # 构建时：使用源码目录的 include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # 构建时：cuda 目录
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/cuda>
+        # 安装后：使用系统的 include 目录
+        $<INSTALL_INTERFACE:include>
+PRIVATE
+        # 仅内部使用的头文件目录
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        # 如果 CUDA 头文件也需要内部使用
+        ${CMAKE_CURRENT_SOURCE_DIR}/cuda  
+)
+target_link_libraries(gconv PUBLIC CUDA::cudart)
+target_compile_definitions(gconv PRIVATE GCONV_EXPORTS)
 
-//====================================================================
+#--------------------------
+# OpenMP
+#--------------------------
+if(USE_OPENMP)
+  find_package(OpenMP)
+  if(OpenMP_CXX_FOUND)
+    target_link_libraries(gconv PUBLIC OpenMP::OpenMP_CXX)
+  endif()
+endif()
+#--------------------------
+# image_codec  图片编解码
+#--------------------------
+if(BUILD_IMAGE_CODEC)
+  set(IMAGE_CODEC_DIR "${CMAKE_SOURCE_DIR}/utils/image_codec")
+  if(EXISTS "${IMAGE_CODEC_DIR}/CMakeLists.txt")
+      add_subdirectory("${IMAGE_CODEC_DIR}")
+    endif()
+endif()
+#--------------------------
+# SDL3 和 SDL3_image 图片查看器
+#--------------------------
+if(BUILD_IMAGE_VIEWER)
+    set(SDL3_DIR "${CMAKE_SOURCE_DIR}/external/SDL3")
+    set(SDL3_IMAGE_DIR "${CMAKE_SOURCE_DIR}/external/SDL3_image")
+    set(IMAGE_VIEWER_DIR "${CMAKE_SOURCE_DIR}/utils/image_viewer")
+    #关闭测试 & 安装
+    set(SDL_SHARED ON  CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON  CACHE BOOL "" FORCE)
+    set(SDL_INSTALL OFF CACHE BOOL "" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "" FORCE)
+    set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+    #关闭一切外部依赖
+    set(SDLIMAGE_AVIF OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_WEBP OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_JXL  OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_TIF  OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_HDR  OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_QOI  OFF CACHE BOOL "" FORCE)
+    # 关闭 samples/tests/install
+    set(SDLIMAGE_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDLIMAGE_INSTALL OFF CACHE BOOL "" FORCE)
+    # 启用 PNG + JPG
+    set(SDLIMAGE_PNG ON CACHE BOOL "" FORCE)
+    set(SDLIMAGE_JPG ON CACHE BOOL "" FORCE)
+    if(EXISTS "${SDL3_DIR}/CMakeLists.txt")
+        add_subdirectory(${SDL3_DIR})
+    endif()
 
+    if(EXISTS "${SDL3_IMAGE_DIR}/CMakeLists.txt")
+        add_subdirectory(${SDL3_IMAGE_DIR})
+    endif()
 
-结合你 CUDA + OpenGL + 实时视频 / HPC 的路线：
+    if(EXISTS "${IMAGE_VIEWER_DIR}/CMakeLists.txt")
+      add_subdirectory(${IMAGE_VIEWER_DIR})
+    endif()
+endif()
+#--------------------------
+# 部分程序示例
+#--------------------------
+if(BUILD_SAMPLES)
+    add_subdirectory(samples)
+endif()
+#--------------------------
+# Test程序示例
+#--------------------------
 
-1️ OpenGL 实时高斯模糊
-	CUDA → PBO → Texture
-	零拷贝显示
-2️ Half / FP16
-	__half2
-3 大核优化（R > 15）
-	sliding window
-	减少重复乘法
-4 多stream + Graph
-	视频 pipeline
-	稳定 latency
-	改成视频流版本（GStreamer / FFmpeg）
-5️ 对比 cuDNN / NPP
-	写 benchmark
-	工程 vs 库的 tradeoff
-6 把高斯接到 OpenGL / 视频流
-7 高斯kernel 接成 实时视频模糊 pipeline
-8 CUDA Graph + multiple stream → 视频 pipeline 零拷贝
-8 CUDA + OpenGL 互操作时 stream 的最佳实践
-	🔹 封装Filter类，实现多滤波器可组合调用
-	🔹 cuda_event + stream 关联（完整异步流水线）
-	🔹 cuda_stream_pool（实时系统 / OpenGL 多帧）
-	🔹 CUDA Graph 友好的 stream 封装
-	🔹 CUDA + OpenGL interop（PBO / texture + stream）
-	🔹 给你一个 filter pipeline（多 kernel + stream）
-	🔹 对接 CUDA + OpenGL PBO / Texture + stream
-	🔹 stream + event 的正确 RAII 组合
-	🔹 多 stream pipeline（双缓冲 / 三缓冲）
-	🔹 CUDA Graph 下 stream 生命周期怎么设计
-	🔹 CUDA + OpenGL interop 的 stream 约束
-	🔹 双缓冲 / 三缓冲 filter pipeline
-	🔹 stream + event 的真正异步计时
-	🔹 CUDA Graph 版本的 launchFilter
-	🔹 CUDA + OpenGL PBO 零拷贝版本
-	🔹 加 event 计时（不破坏并发）
-	🔹 改成 CUDA Graph 版本
-	🔹 或接入 CUDA + OpenGL PBO
-	🔹 CUDA Graph capture
-	🔹 stream + event 精确计时
-	🔹 CUDA + OpenGL PBO / Texture
-	🔹 多 stream load balancing
-	🔹 MPSC 任务队列
-	🔹把这套 capture 成 CUDA Graph
-	🔹OpenGL PBO → CUDA → texture
-	🔹做 双 stream overlap（copy / compute）
-	🔹给你一个 benchmark + event 计时模板
-	🔹 CUDA Graph capture（每个 buffer 一张 graph）
-	🔹 CUDA + OpenGL PBO（真正零拷贝显示）
-	🔹 多 GPU / 多 pipeline 调度
-	🔹 lock-free MPSC 输入队列
-	🔹 把这套 pipeline capture 成 CUDA Graph
-	🔹 CUDA + OpenGL PBO / Texture
-	🔹 back-pressure / FPS 限制 / queue
-	🔹 做 多 pipeline + load balancing
-	🔹 Graph Node Parameter Update（不用 rebuild）
-	🔹 Graph + CUDA Event 跨 pipeline 同步
-	🔹 Graph + OpenGL PBO / Vulkan interop
-	🔹 多 GPU pipeline + Graph
-	🔹 接 实时视频 / OpenGL
-	🔹 CUDA + OpenGL 实时 Sobel（PBO）
-	🔹 多 stream + CPU producer / consumer 模拟
+if(BUILD_TESTS)
+    add_subdirectory(test) 
+endif()

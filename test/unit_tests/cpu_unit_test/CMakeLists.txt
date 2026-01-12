@@ -2,11 +2,11 @@
 #---------------------------------------------
 # 添加可执行文件
 #---------------------------------------------
-add_executable(unit_conv2d_cpu_omp test_cpu_conv2d_omp.cpp)
+add_executable(unit_test_cpu_kernel unit_test_cpu_kernel.cpp)
 #---------------------------------------------
 # 链接库
 #---------------------------------------------
-target_link_libraries(unit_conv2d_cpu_omp
+target_link_libraries(unit_test_cpu_kernel
     PRIVATE
     gconv
     GTest::gtest 
@@ -17,7 +17,7 @@ target_link_libraries(unit_conv2d_cpu_omp
 #     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 # )
 
-copy_runtime_dlls(unit_conv2d_cpu_omp)
+copy_runtime_dlls(unit_test_cpu_kernel)
 # set_target_properties(unit_cpu_tests PROPERTIES
 #     MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>"
 # )
@@ -26,12 +26,12 @@ copy_runtime_dlls(unit_conv2d_cpu_omp)
 #---------------------------------------------
 include(GoogleTest)
 if (WIN32)
-gtest_discover_tests(unit_conv2d_cpu_omp
+gtest_discover_tests(unit_test_cpu_kernel
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
     DISCOVERY_MODE POST_BUILD
 )
 else()
-    gtest_discover_tests(unit_conv2d_cpu_omp)
+    gtest_discover_tests(unit_test_cpu_kernel)
 endif()
 #---------------------------------------------
 # 添加测试

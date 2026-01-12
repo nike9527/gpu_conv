@@ -88,7 +88,7 @@ public:
     void release_async() noexcept
     {
         // 异步释放：先查询 event，如果还在 GPU 执行，不阻塞
-        if (busy_ && cudaEventQuery(event_.get()) != cudaSuccess)
+        if (state_ == buffer_state::FREE && cudaEventQuery(event_.get()) != cudaSuccess)
         {
             // GPU 还在使用 → buffer 保留
             return;
@@ -100,7 +100,7 @@ public:
             cudaFreeHost(h_out_);
         h_in_ = h_out_ = nullptr;
         capacity_ = 0;
-        busy_ = false;
+        // busy_ = false;
     }
     T *h_in() noexcept { return h_in_; }
     T *h_out() noexcept { return h_out_; }
@@ -114,7 +114,7 @@ public:
     size_t capacity() const noexcept { return capacity_; }
     // bool busy() const noexcept { return busy_; }
     // void mark_busy() noexcept { busy_ = true; }
-    void mark_free() noexcept { busy_ = false; }
+    // void mark_free() noexcept { busy_ = false; }
     int id() const noexcept { return id_; }
 
 private:

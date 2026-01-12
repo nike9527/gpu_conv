@@ -1,25 +1,52 @@
-add_executable(unit_gpu_tests
-    test_conv_gpu.cpp
+#===========================gpu 全局内存===================================
+add_executable(unit_test_gpu_kernel_global
+    unit_test_gpu_kernel_global.cpp
 )
 
-set_target_properties(unit_gpu_tests PROPERTIES
+set_target_properties(unit_test_gpu_kernel_global PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON
 )
 
-target_link_libraries(unit_gpu_tests
+target_link_libraries(unit_test_gpu_kernel_global
     PRIVATE
     gconv
     CUDA::cudart
     GTest::gtest
     GTest::gtest_main
 )
-copy_runtime_dlls(unit_gpu_tests)
+copy_runtime_dlls(unit_test_gpu_kernel_global)
 include(GoogleTest)
 if (WIN32)
-gtest_discover_tests(unit_gpu_tests
+gtest_discover_tests(unit_test_gpu_kernel_global
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
     DISCOVERY_MODE POST_BUILD
 )
 else()
-    gtest_discover_tests(unit_gpu_tests)
+    gtest_discover_tests(unit_test_gpu_kernel_global)
+endif()
+#===========================gpu 共享内存===================================
+add_executable(unit_test_gpu_kernel_shared
+    unit_test_gpu_kernel_shared.cpp
+)
+
+set_target_properties(unit_test_gpu_kernel_shared PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+)
+
+target_link_libraries(unit_test_gpu_kernel_shared
+    PRIVATE
+    gconv
+    CUDA::cudart
+    GTest::gtest
+    GTest::gtest_main
+)
+copy_runtime_dlls(unit_test_gpu_kernel_shared)
+include(GoogleTest)
+if (WIN32)
+gtest_discover_tests(unit_test_gpu_kernel_shared
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+    DISCOVERY_MODE POST_BUILD
+)
+else()
+    gtest_discover_tests(unit_test_gpu_kernel_shared)
 endif()

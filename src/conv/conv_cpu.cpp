@@ -269,8 +269,6 @@ namespace cpu_conv
      * @param out   输出数据
      * @param w  宽度
      * @param h  高度
-     * @param dx x方向卷积
-     * @param dy y方向卷积
      */
     void sobel(const float *in, float *out, const int w, const int h)
     {

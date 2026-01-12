@@ -54,7 +54,7 @@ stream_buffer<T> &triple_pipeline<T, N>::acquire()
         auto &buf = buffers_[write_idx_];
         if (buf.is_free())
         {
-            write_idx_ = (idx + 1) % N;
+            write_idx_ = (write_idx_ + 1) % N;
             return buf;
         }
         // GPU 已完成，回收
@@ -92,8 +92,20 @@ void triple_pipeline<T, N>::submit(stream_buffer<T> &buf)
     // buf.mark_busy();
     // inflight_++;
     //=========================上面注释调整到下面================================
+    if (!buf.is_free())
+    {
+#ifndef NDEBUG
+        // 发布版本：快速失败
+        return;
+#else
+        // 调试版本：详细异常
+        throw std::logic_error("Cannot submit free buffer.");
+#endif
+    }
+
     CUDA_CHECK(cudaEventRecord(buf.event(), buf.stream()));
     buf.mark_inflight();
+    inflight_++;
 }
 // 支持乱序完成
 /**
@@ -149,6 +161,6 @@ void triple_pipeline<T, N>::release(stream_buffer<T> &buf)
     //=========================上面注释调整到下面================================
     if (!buf.is_completed())
         throw std::logic_error("release non-completed buffer");
-
+    inflight_--;
     buf.mark_free();
 }
