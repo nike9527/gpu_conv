@@ -1,6 +1,9 @@
 #pragma once
 #include "stream_buffer.hpp"
 #include "cuda/cuda_memory.hpp"
+#include <memory>
+#include <mutex>
+#include <condition_variable>
 template <typename T, int N = 3>
 /**
  * @brief
@@ -27,6 +30,14 @@ public:
     void release(stream_buffer<T> &buf);
 
     int inflight() const noexcept { return inflight_; }
+    /**
+     * @brief 流中回调函数的机制
+     *
+     * @param stream
+     * @param status
+     * @param userData
+     */
+    void CUDART_CB multiStreamCallback(cudaStream_t stream, cudaError_t status, void *userData);
 
 private:
     stream_buffer<T> buffers_[N];
@@ -67,6 +78,10 @@ stream_buffer<T> &triple_pipeline<T, N>::acquire()
         // }
         write_idx_ = (write_idx_ + 1) % N;
     }
+    // 采用条件变量通知
+    //  std::unique_lock<std::mutex> lock(syncData.mtx);
+    //  syncData.cv.wait(lock, [&]()
+    //                   { return syncData.completed_count == NUM_STREAMS; });
 
     // // 2. 全部 busy，等待最早完成的那个（通常是 read_idx_）
     // auto &buf = buffers_[read_idx_];
@@ -95,14 +110,13 @@ void triple_pipeline<T, N>::submit(stream_buffer<T> &buf)
     if (!buf.is_free())
     {
 #ifndef NDEBUG
-        // 发布版本：快速失败
-        return;
-#else
         // 调试版本：详细异常
         throw std::logic_error("Cannot submit free buffer.");
+#else
+        // 发布版本：快速失败
+        return;
 #endif
     }
-
     CUDA_CHECK(cudaEventRecord(buf.event(), buf.stream()));
     buf.mark_inflight();
     inflight_++;
@@ -163,4 +177,12 @@ void triple_pipeline<T, N>::release(stream_buffer<T> &buf)
         throw std::logic_error("release non-completed buffer");
     inflight_--;
     buf.mark_free();
+}
+template <typename T, int N>
+void CUDART_CB triple_pipeline<T, N>::multiStreamCallback(cudaStream_t stream, cudaError_t status, void *userData)
+{
+    stream_buffer<T> *buf = static_cast<stream_buffer<T>>(userData);
+    buf->mark_completed();
+    inflight_--;
+    read_idx_ = (read_idx_ + 1) % N;
 }

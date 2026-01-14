@@ -1,25 +1,24 @@
 ﻿#pragma once
 #include "bench_types.hpp"
 #include <vector>
-struct BenchCase {
+struct BenchCase
+{
     int width;
     int height;
     int kSize;
-    int block_x;
-    int block_y;
-    int block_z;
-    int grid_x;
-    int grid_y;
-    int grid_z;
     filter_type filter;
     mem_type mType;
     PipelineType pipeline;
 };
-struct BenchResult {float kernel_ms;float gpixel;};
+struct BenchResult
+{
+    float kernel_ms;
+    float gpixel;
+};
 /**
  * @brief  高斯测试用例
- * 
- * @return std::vector<BenchCase> 
+ *
+ * @return std::vector<BenchCase>
  */
 // inline std::vector<BenchCase> getBenchCases() {
 //     return {
@@ -46,18 +45,19 @@ struct BenchResult {float kernel_ms;float gpixel;};
 //     };
 // }
 
-inline std::vector<BenchCase> getBenchCases() {
+inline std::vector<BenchCase> getBenchCases()
+{
     return {
-        {2560, 1440, 3, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::GLOBAL,       PipelineType::SINGLE_STREAM},
-        {2560, 1440, 3, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::SHAREDCONST,  PipelineType::SINGLE_STREAM},
+        {2560, 1440, 3, filter_type::SHARPEN, mem_type::GLOBAL, PipelineType::SINGLE_STREAM},
+        {2560, 1440, 3, filter_type::SHARPEN, mem_type::SHAREDCONST, PipelineType::SINGLE_STREAM},
 
-        {2560, 1440, 5, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::GLOBAL,       PipelineType::SINGLE_STREAM},
-        {2560, 1440, 5, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::SHAREDCONST,  PipelineType::SINGLE_STREAM},
+        {2560, 1440, 5, filter_type::SHARPEN, mem_type::GLOBAL, PipelineType::SINGLE_STREAM},
+        {2560, 1440, 5, filter_type::SHARPEN, mem_type::SHAREDCONST, PipelineType::SINGLE_STREAM},
 
-        {2560, 1440, 7, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {2560, 1440, 7, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::SHAREDCONST,  PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 7, filter_type::SHARPEN, mem_type::GLOBAL, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 7, filter_type::SHARPEN, mem_type::SHAREDCONST, PipelineType::TRIPLE_BUFFER},
 
-        {2560, 1440, 9, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::GLOBAL,       PipelineType::TRIPLE_BUFFER},
-        {2560, 1440, 9, 0, 0, 0, 0, 0, 0, filter_type::SHARPEN, mem_type::SHAREDCONST,  PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 9, filter_type::SHARPEN, mem_type::GLOBAL, PipelineType::TRIPLE_BUFFER},
+        {2560, 1440, 9, filter_type::SHARPEN, mem_type::SHAREDCONST, PipelineType::TRIPLE_BUFFER},
     };
 }

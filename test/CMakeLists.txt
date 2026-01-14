@@ -13,7 +13,7 @@ enable_testing()
 #---------------------------------------------
 option(ENABLE_UNIT_TESTS        "Build unit tests"          ON)
 option(ENABLE_INTEGRATION_TESTS "Build integration tests"   OFF)
-option(ENABLE_BENCHMARKS        "Build benchmarks"          OFF)
+option(ENABLE_BENCHMARKS        "Build benchmarks"          ON)
 
 message(STATUS "  Test config:")
 message(STATUS "  Unit tests        : ${ENABLE_UNIT_TESTS}")
@@ -24,10 +24,7 @@ message(STATUS "  Benchmarks        : ${ENABLE_BENCHMARKS}")
 if(NOT TARGET gconv)
     message(FATAL_ERROR "gconv target not found!")
 endif()
-#---------------------------------------------
-# 依赖gtest
-#---------------------------------------------
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/gtest.cmake)
+
 #---------------------------------------------
 # 子目录调度
 #---------------------------------------------

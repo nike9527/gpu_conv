@@ -16,3 +16,4 @@ gtest_discover_tests(integration_tests DISCOVERY_MODE POST_BUILD)
 else()
     gtest_discover_tests(unit_cpu_tests)
 endif()
+

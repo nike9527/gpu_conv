@@ -1,6 +1,6 @@
 #pragma once
 #include "pipeline_stage.hpp"
-#include "convolution_kernel.cuh"
+#include "kernels/kernels.cuh"
 
 class sharpen_stage final : public pipeline_stage<float>
 {

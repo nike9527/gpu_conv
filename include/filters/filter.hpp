@@ -36,7 +36,7 @@ public:
      *              sigma的大小直接影响滤波器的权重分布，越大越模糊
      * @return filter
      */
-    static filter filter::gaussian2D(int size, float sigma);
+    static filter gaussian2D(int size, float sigma);
     /**
      * @brief 高斯模糊核 1D
      * @param size  核的大小

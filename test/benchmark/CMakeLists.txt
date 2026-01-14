@@ -1,11 +1,19 @@
-add_executable(bench_test bench_main.cpp bench_types.hpp bench_runner.cu bench_report.cpp bench_config.hpp bench_filter.hpp)
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/gbenchmark.cmake)
+
+# add_executable(bench_test bench_main.cpp bench_types.hpp bench_runner.cu bench_report.cpp bench_config.hpp bench_filter.hpp)
+add_executable(bench_test bench_main.cpp bench_gaussian.cu)
 target_include_directories(bench_test
     PRIVATE  
     ${CMAKE_SOURCE_DIR}/include                           
     ${CMAKE_SOURCE_DIR}/cuda       
 )
 # set_target_properties(bench_test PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-target_link_libraries(bench_test PRIVATE gconv)
+target_link_libraries(bench_test PRIVATE gconv benchmark::benchmark)
+target_compile_features(bench_test PRIVATE cxx_std_20)
+
+set_target_properties(bench_test PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+)
 
 # add_executable(bench_sobel
 #     bench_sobel.cu

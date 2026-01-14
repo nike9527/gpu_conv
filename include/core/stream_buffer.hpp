@@ -137,13 +137,13 @@ private:
 
 private:
     int id_{0};
-    T *h_in_ = nullptr;
-    T *h_out_ = nullptr;
+    T *h_in_{nullptr};
+    T *h_out_{nullptr};
     cuda_memory<T> d_in_;
     cuda_memory<T> d_out_;
     size_t capacity_ = 0;
     cuda_stream stream_{cudaStreamNonBlocking};
     cuda_event event_;
     // bool busy_ = false;
-    buffer_state state_ = buffer_state::FREE;
+    buffer_state state_{buffer_state::FREE};
 };

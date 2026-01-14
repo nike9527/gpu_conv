@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "cuda_exception.hpp"
 #include <iostream>
+#include <string>
 class cuda_stream
 {
 public:
@@ -67,6 +68,10 @@ public:
         }
         stream_ = nullptr;
         owning_ = false;
+    }
+    void addCallbacktoStream(cudaStreamCallback_t callBack, void *data)
+    {
+        cudaStreamAddCallback(stream_, callBack, data, 0);
     }
 
 private:

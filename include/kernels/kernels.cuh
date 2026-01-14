@@ -15,5 +15,9 @@ void launchMeanBlur(filter_pipeline &pipe, const float *in, float *out, mem_type
 void launchsharpen(filter_pipeline &pipe, const float *in, float *out, mem_type type, int block_w = 16, int block_h = 16);
 void launchSobel(filter_pipeline &pipe, const float *in, float *out, mem_type type, int block_w = 16, int block_h = 16);
 
+__global__ void gaussianConvolutionShared2D(const float *__restrict__ input, float *__restrict__ output,
+                                            const int width, const int height, const int kSize);
+
+
 
 
