@@ -19,7 +19,7 @@ include(GoogleTest)
 if (WIN32)
 gtest_discover_tests(unit_test_gpu_kernel_global
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
-    DISCOVERY_MODE POST_BUILD
+    DISCOVERY_MODE PRE_TEST
 )
 else()
     gtest_discover_tests(unit_test_gpu_kernel_global)

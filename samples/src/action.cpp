@@ -78,7 +78,11 @@ namespace gconv
         //================GPU进行高斯计算-共享内存=====================
         gpu_conv::gaussianBlur(imgData.data.data(), out.data.data(), imgData.width, imgData.height, mem_type::SHAREDCONST, 7, 5.f);
         out.imageSaveToFile(destPaht4);
+
+        gpu_conv::launchGaussianRGBA(out.data.data());
+
         renderImage(std::vector<std::string>{destPaht1, destPaht2, destPaht3, destPaht4}, imgData.width, imgData.height);
+
         return true;
     }
     /**

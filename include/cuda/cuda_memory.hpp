@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <utility>
 
-template <typename T>
+template <typename T = float>
 class cuda_memory
 {
 public:

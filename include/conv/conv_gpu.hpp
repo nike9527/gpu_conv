@@ -72,4 +72,5 @@ namespace gpu_conv
      * @param block_h
      */
     void launchFilterAsync(filter_pipeline &pipe, const float *in, float *out, const int width, const int height, const filter_type type, int block_w = 16, int block_h = 16);
+    void launchGaussianRGBA(const float *in);
 };

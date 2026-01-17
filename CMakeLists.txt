@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #--------------------------
 option(BUILD_SAMPLES "Build sample executables" ON)
 option(USE_OPENMP "Use OpenMP for CPU baseline" ON)
-option(BUILD_TESTS "Build the Test case " ON)
+option(BUILD_TESTS "Build the Test case " OFF)
 option(BUILD_IMAGE_VIEWER "Build the image viewer tool" ON)
 option(BUILD_IMAGE_CODEC  "Build the image decode/encode tool" ON)
 #--------------------------
@@ -21,6 +21,15 @@ option(BUILD_IMAGE_CODEC  "Build the image decode/encode tool" ON)
 #--------------------------
 find_package(CUDAToolkit REQUIRED)
 set(CMAKE_BUILD_TYPE Debug)
+#--------------------------
+# GLAD (OpenGL函数加载器) - 必须先于GLFW
+#--------------------------
+# 添加GLAD作为子目录
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad)
+#--------------------------
+# opengl
+#--------------------------
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw-3.4)
 #--------------------------
 # 配置输出目录
 #--------------------------
@@ -52,6 +61,7 @@ endif()
 add_library(gconv STATIC
     src/filters/filter.cpp
     src/conv/conv_gpu.cpp
+    src/gl/gl_pbo.cpp
     src/conv/conv_cpu.cpp
     src/kernels/cuda_utils.cu
     src/kernels/kernels_filter.cu
@@ -68,19 +78,20 @@ add_library(gconv STATIC
 set_target_properties(gconv PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 target_include_directories(gconv 
 PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include
         # 构建时：使用源码目录的 include
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        # 构建时：cuda 目录
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/cuda>
         # 安装后：使用系统的 include 目录
         $<INSTALL_INTERFACE:include>
 PRIVATE
+        # 构建时：cuda 目录
+        # $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/cuda>
         # 仅内部使用的头文件目录
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         # 如果 CUDA 头文件也需要内部使用
         ${CMAKE_CURRENT_SOURCE_DIR}/cuda  
 )
-target_link_libraries(gconv PUBLIC CUDA::cudart)
+target_link_libraries(gconv PUBLIC CUDA::cudart glad)
 target_compile_definitions(gconv PRIVATE GCONV_EXPORTS)
 
 #--------------------------
@@ -147,9 +158,6 @@ endif()
 if(BUILD_SAMPLES)
     add_subdirectory(samples)
 endif()
-#--------------------------
-# Test程序示例
-#--------------------------
 
 if(BUILD_TESTS)
     add_subdirectory(test) 

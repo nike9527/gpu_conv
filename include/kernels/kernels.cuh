@@ -4,6 +4,7 @@
 #include "filters/kernel_desc.hpp"
 #include "core/filter_pipeline.hpp"
 #include "filters/filter.hpp"
+#include "pipeline/gl_frame_slot.hpp"
 
 extern __constant__ float constkernel[4096];
 cudaError_t memCpyConstant(const float* hostKernel,int kernelSize);
@@ -17,6 +18,14 @@ void launchSobel(filter_pipeline &pipe, const float *in, float *out, mem_type ty
 
 __global__ void gaussianConvolutionShared2D(const float *__restrict__ input, float *__restrict__ output,
                                             const int width, const int height, const int kSize);
+
+void gaussianRGBAGPU(
+    gl_frame_slot &pipe,
+    const float* d_in,     // 输入：灰度 or float
+    int width,
+    int height
+);
+
 
 
 

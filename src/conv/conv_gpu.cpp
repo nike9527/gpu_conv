@@ -105,4 +105,15 @@ namespace gpu_conv
         filter obj = filter::getFilterObj(filter_type);
         launchFilter(pipe, in, out, mem_type::SHAREDCONST, obj);
     }
+#include "pipeline/gl_frame_slot.hpp"
+    void launchGaussianRGBA(const float *in)
+    {
+        gl_frame_slot gl_pipe;
+        gl_pipe.pbo = std::make_unique<GLPBO>(800, 800);
+        gl_pipe.pbo->map(gl_pipe.stream);
+        // gaussianRGBAGPU(gl_pipe, in, 800, 800);
+        cudaMemsetAsync(gl_pipe.pbo->device_ptr(), 0, gl_pipe.pbo->size_bytes(), gl_pipe.stream.get());
+        gl_pipe.stream.synchronize();
+        gl_pipe.pbo->unmap(gl_pipe.stream.get());
+    }
 }

@@ -2,6 +2,7 @@ add_executable(samples_cpu_vs_gpu main.cpp src/action.cpp)
 target_include_directories(samples_cpu_vs_gpu
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_SOURCE_DIR}/external/glfw-3.4/include
 )
 # 检查库是否存在
 if(TARGET image_viewer)
@@ -15,4 +16,4 @@ if(TARGET image_codec)
 else()
     message(WARNING "Target image_codec not found!")
 endif()
-target_link_libraries(samples_cpu_vs_gpu PRIVATE gconv image_viewer image_codec)
+target_link_libraries(samples_cpu_vs_gpu PRIVATE gconv image_viewer image_codec opengl32 glfw)

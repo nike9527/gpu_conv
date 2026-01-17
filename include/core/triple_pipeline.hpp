@@ -1,46 +1,39 @@
 #pragma once
 #include "stream_buffer.hpp"
 #include "cuda/cuda_memory.hpp"
-#include <memory>
-#include <mutex>
-#include <condition_variable>
-template <typename T, int N = 3>
+#include <array>
+#include <cassert>
+//
 /**
  * @brief
- “已完成但仍占用”
-CUDA event 只保证 GPU 不再使用 buffer
-buffer 是否能复用，取决于系统是否还需要它
- *
+ TODO acquire / submit / fetch 做成 lock-free MPSC 版本
+ TODO 异步提交版本，同一个stream可以多次提交，不用等待FREE
+ * @tparam SlotT
+ * @tparam N
  */
+template <typename SlotT, int N = 3>
 class triple_pipeline
 {
 public:
-    explicit triple_pipeline(size_t max_elements)
-    {
-        for (auto &buf : buffers_)
-            buf.allocate(max_elements);
-    }
+    explicit triple_pipeline() = default;
+    // explicit triple_pipeline(size_t max_elements)
+    // {
+    //     for (auto &buf : slots_)
+    //         buf.allocate(max_elements);
+    // }
     // 阻塞，直到拿到一个可写 buffer
-    stream_buffer<T> &acquire();
+    SlotT &acquire();
     // 提交 GPU 工作（进入 inflight）
-    void submit(stream_buffer<T> &buf);
+    void submit(SlotT &buf);
     // 非阻塞获取一个“已完成但仍占用”的 buffer
-    stream_buffer<T> *try_fetch();
+    SlotT *try_fetch();
     // 消费完成，显式释放
-    void release(stream_buffer<T> &buf);
+    void release(SlotT &buf);
 
     int inflight() const noexcept { return inflight_; }
-    /**
-     * @brief 流中回调函数的机制
-     *
-     * @param stream
-     * @param status
-     * @param userData
-     */
-    void CUDART_CB multiStreamCallback(cudaStream_t stream, cudaError_t status, void *userData);
 
 private:
-    stream_buffer<T> buffers_[N];
+    SlotT slots_[N];
     int write_idx_ = 0;
     int read_idx_ = 0;
     // 执行中的数量
@@ -48,72 +41,36 @@ private:
 };
 /**
  * @brief 优先返回 FREE buffer
- *
- * @return template <typename T, int N>&
-for each buffer:
-    if !busy → return
-if none:
-    wait any event → free → return
-*/
+ * @return SlotT&
+ */
 // TODO
-template <typename T, int N>
-stream_buffer<T> &triple_pipeline<T, N>::acquire()
+template <typename SlotT, int N>
+SlotT &triple_pipeline<SlotT, N>::acquire()
 {
     // 1. 先尝试找到一个空闲 buffer
     for (int i = 0; i < N; ++i)
     {
-        auto &buf = buffers_[write_idx_];
+        auto &buf = slots_[write_idx_];
         if (buf.is_free())
         {
             write_idx_ = (write_idx_ + 1) % N;
             return buf;
         }
-        // GPU 已完成，回收
-        // if (cudaEventQuery(buffers_[idx].event()) == cudaSuccess)
-        // {
-        //     buffers_[idx].mark_free();
-        //     inflight_--;
-        //     write_idx_ = (idx + 1) % N;
-        //     return buffers_[idx];
-        // }
         write_idx_ = (write_idx_ + 1) % N;
     }
-    // 采用条件变量通知
-    //  std::unique_lock<std::mutex> lock(syncData.mtx);
-    //  syncData.cv.wait(lock, [&]()
-    //                   { return syncData.completed_count == NUM_STREAMS; });
-
-    // // 2. 全部 busy，等待最早完成的那个（通常是 read_idx_）
-    // auto &buf = buffers_[read_idx_];
-
-    // CUDA_CHECK(cudaEventSynchronize(buf.event()));
-    // buf.mark_free();
-    // inflight_--;
-
-    // write_idx_ = (read_idx_ + 1) % N;
-    // return buf;
-    //=========================上面注释调整到下面================================
     // 没有 FREE buffer：必须等待一个 COMPLETED 被 release
     // 这里可以选择阻塞 / spin / yield
-    throw std::runtime_error("no free buffer available");
+    throw nullptr;
 }
 
-template <typename T, int N>
-void triple_pipeline<T, N>::submit(stream_buffer<T> &buf)
+template <typename SlotT, int N>
+void triple_pipeline<SlotT, N>::submit(SlotT &buf)
 {
-    // 必须是空闲 buffer
-    // assert(!buf.busy());
-    // CUDA_CHECK(cudaEventRecord(buf.event(), buf.stream()));
-    // buf.mark_busy();
-    // inflight_++;
-    //=========================上面注释调整到下面================================
     if (!buf.is_free())
     {
 #ifndef NDEBUG
-        // 调试版本：详细异常
-        throw std::logic_error("Cannot submit free buffer.");
+        throw std::logic_error("Cannot submit non-free buffer.");
 #else
-        // 发布版本：快速失败
         return;
 #endif
     }
@@ -121,35 +78,13 @@ void triple_pipeline<T, N>::submit(stream_buffer<T> &buf)
     buf.mark_inflight();
     inflight_++;
 }
-// 支持乱序完成
-/**
- * @brief
- *
- * @tparam T
- * @tparam N
- * @return stream_buffer<T>*
- for each buffer:
-    if busy && event ready → return
- */
 // TODO
-template <typename T, int N>
-stream_buffer<T> *triple_pipeline<T, N>::try_fetch()
+template <typename SlotT, int N>
+SlotT *triple_pipeline<SlotT, N>::try_fetch()
 {
-    // for (int i = 0; i < N; ++i)
-    // {
-    //     auto &buf = buffers_[read_idx_];
-    //     if (!buf.busy())
-    //         continue;
-    //     auto err = cudaEventQuery(buf.event());
-    //     if (err == cudaErrorNotReady)
-    //         continue;
-    //     CUDA_CHECK(err);
-    //     return &buf;
-    // }
-    //=========================上面注释调整到下面================================
     for (int i = 0; i < N; ++i)
     {
-        auto &buf = buffers_[read_idx_];
+        auto &buf = slots_[read_idx_];
 
         if (buf.is_inflight())
         {
@@ -166,23 +101,11 @@ stream_buffer<T> *triple_pipeline<T, N>::try_fetch()
     return nullptr;
 }
 
-template <typename T, int N>
-void triple_pipeline<T, N>::release(stream_buffer<T> &buf)
+template <typename SlotT, int N>
+void triple_pipeline<SlotT, N>::release(SlotT &buf)
 {
-    // assert(buf.busy());
-    // buf.mark_free();
-    // inflight_--;
-    //=========================上面注释调整到下面================================
     if (!buf.is_completed())
-        throw std::logic_error("release non-completed buffer");
+        return;
     inflight_--;
     buf.mark_free();
-}
-template <typename T, int N>
-void CUDART_CB triple_pipeline<T, N>::multiStreamCallback(cudaStream_t stream, cudaError_t status, void *userData)
-{
-    stream_buffer<T> *buf = static_cast<stream_buffer<T>>(userData);
-    buf->mark_completed();
-    inflight_--;
-    read_idx_ = (read_idx_ + 1) % N;
 }

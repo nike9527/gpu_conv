@@ -1,4 +1,5 @@
 #include "kernels/kernels.cuh"
+#include <cstdint>
 #include "cuda/cuda_memory.hpp"
 #include "filters/filter.hpp"
 __global__ void gaussianConvolutionGlobal2D(const float *__restrict__ input, float *__restrict__ output,
@@ -217,4 +218,35 @@ void launchGaussianBlur(filter_pipeline &pipe, const float *in, float *out, mem_
     // std::cout << "GPU time: " << start.elapsed_ms(stop) << " ms\n";
     pipe.d_output.copy_to_host_async(out, width * height, pipe.stream.get());
     return;
+}
+__device__ __forceinline__ uint8_t to_uchar(float v){
+    v = fminf(fmaxf(v,0.0f),1.0f);
+    return static_cast<uint8_t>(v * 255.0f);
+}
+__global__ void gaussian_rgba_kernel(const float* __restrict__ in, uchar4 * __restrict__ out, int w, int h){
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    if (x >= w || y >= h) return;
+    int idx = y + w + x;
+    float v = in[idx];
+    uint8_t c = to_uchar(v);
+    out[idx] = make_uchar4(c,c,c,255);
+}
+
+
+
+#include "pipeline/gl_frame_slot.hpp"
+void gaussianRGBAGPU(gl_frame_slot &pipe, const float * in, int width, int height)
+{
+    pipe.pbo->map(pipe.stream.get());
+    float* d_in;
+    cudaMalloc(&d_in, width * height * sizeof(float));
+    cudaMemcpyAsync(&d_in, in, sizeof(float) * width * height, cudaMemcpyHostToDevice, pipe.stream.get());
+    dim3 block(16, 16);
+    dim3 grid((width + 15) / 16,(height + 15) / 16);
+
+    // gaussian_rgba_kernel<<<grid, block, 0, slot->get_stream()>>>(static_cast<uint8_t *>(dev_ptr), width, height );
+    // gaussian_rgba_kernel<<<grid, block, 0, pipe.stream.get()>>>(d_in, pipe.pbo->device_ptr(),width,height);
+    cudaMemsetAsync(pipe.pbo->device_ptr(),0,pipe.pbo->size_bytes(),pipe.stream.get());
+
 }
