@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "filters/filter.hpp"
-#include "core/filter_pipeline.hpp"
+#include "core/stream_buffer.hpp"
 namespace gpu_conv
 {
     /**

@@ -12,7 +12,7 @@ class stream_buffer
 {
 public:
     stream_buffer() : id_(next_id_++) {};
-    explicit stream_buffer(size_t max_elements) { allocate(max_elements); }
+    explicit stream_buffer(size_t max_elements, T *data = nullptr) { allocate(max_elements, data); }
     // 禁止拷贝
     stream_buffer(const stream_buffer &) = delete;
     stream_buffer &operator=(const stream_buffer &) = delete;
@@ -30,34 +30,34 @@ public:
 
     ~stream_buffer() { release_async(); }
 
-    void allocate(size_t elements)
+    void allocate(size_t elements, T *data)
     {
         if (elements <= capacity_)
             return;
 
         // release();
         release_async();
-
         capacity_ = elements;
         size_t bytes = elements * sizeof(T);
+        d_in_ = cuda_memory<T>(elements);
+        d_out_ = cuda_memory<T>(elements);
 
         CUDA_CHECK(cudaMallocHost(&h_in_, bytes));
         CUDA_CHECK(cudaMallocHost(&h_out_, bytes));
 
-        d_in_ = cuda_memory<T>(elements);
-        d_out_ = cuda_memory<T>(elements);
+        if (data)
+        {
+            d_in_.copy_from_host_async(data,elements,stream_.get()));
+        }
     }
 
     void release() noexcept
     {
-        // if (busy_)
-        //     cudaEventSynchronize(event_.get());
         if (h_in_)
             cudaFreeHost(h_in_);
         if (h_out_)
             cudaFreeHost(h_out_);
         h_in_ = h_out_ = nullptr;
-        // busy_ = false;
         capacity_ = 0;
         state_ = pipeline_state::FREE;
     }
@@ -74,14 +74,10 @@ public:
     cudaStream_t stream() const noexcept { return stream_.get(); }
     cudaEvent_t event() const noexcept { return event_.get(); }
     size_t capacity() const noexcept { return capacity_; }
-    // bool busy() const noexcept { return busy_; }
     T *h_in() noexcept { return h_in_; }
     T *h_out() noexcept { return h_out_; }
     T *d_in() noexcept { return d_in_.data(); }
     T *d_out() noexcept { return d_out_.data(); }
-
-    // void mark_busy() noexcept { busy_ = true; }
-    // void mark_free() noexcept { busy_ = false; }
     int id() const noexcept { return id_; }
     void release_async() noexcept
     {
@@ -98,7 +94,6 @@ public:
             cudaFreeHost(h_out_);
         h_in_ = h_out_ = nullptr;
         capacity_ = 0;
-        // busy_ = false;
     }
 
 private:
@@ -123,12 +118,10 @@ private:
     int id_{0};
     T *h_in_{nullptr};
     T *h_out_{nullptr};
+    cuda_event event_;
     cuda_memory<T> d_in_;
     cuda_memory<T> d_out_;
-    size_t capacity_ = 0;
+    size_t capacity_{0};
     cuda_stream stream_{cudaStreamNonBlocking};
-    cuda_event event_;
-    // bool busy_ = false;
     pipeline_state state_{pipeline_state::FREE};
-    pipeline_slot_base slot;
 };
