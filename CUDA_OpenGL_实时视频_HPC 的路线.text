@@ -1,0 +1,83 @@
+补一套 gl_frame_slot + gl_pbo 最小 demo（无渲染，只验证 pipeline）
+直接进入 Step 3：main_gl_realtime.cpp（GLFW / EGL 两版
+
+CUDA写PBO、GL直接显示、同一个triple pipeline
+
+今天：single stream
+
+明天：multi stream
+
+后天：batch kernel
+CudaGLFrameSlot → GenericGpuFrameSlot
+“写 multi-stream demo”
+
+3️⃣ 设计 CUDA / GL / TensorRT 三 backend 共享 pipeline 的终极结构
+4️⃣ 直接帮你把现在的 include/core 拆成 runtime / api / dispatch（逐文件迁移）
+
+
+4️⃣ 补一组“backend-agnostic pipeline”的单元测试
+
+
+结合你 CUDA + OpenGL + 实时视频 / HPC 的路线：
+
+1️ OpenGL 实时高斯模糊
+	CUDA → PBO → Texture
+	零拷贝显示
+2️ Half / FP16
+	__half2
+3 大核优化（R > 15）
+	sliding window
+	减少重复乘法
+4 多stream + Graph
+	视频 pipeline
+	稳定 latency
+	改成视频流版本（GStreamer / FFmpeg）
+5️ 对比 cuDNN / NPP
+	写 benchmark
+	工程 vs 库的 tradeoff
+6 把高斯接到 OpenGL / 视频流
+7 高斯kernel 接成 实时视频模糊 pipeline
+8 CUDA Graph + multiple stream → 视频 pipeline 零拷贝
+8 CUDA + OpenGL 互操作时 stream 的最佳实践
+	🔹 封装Filter类，实现多滤波器可组合调用
+	🔹 cuda_event + stream 关联（完整异步流水线）
+	🔹 cuda_stream_pool（实时系统 / OpenGL 多帧）
+	🔹 CUDA Graph 友好的 stream 封装
+	🔹 CUDA + OpenGL interop（PBO / texture + stream）
+	🔹 给你一个 filter pipeline（多 kernel + stream）
+	🔹 对接 CUDA + OpenGL PBO / Texture + stream
+	🔹 stream + event 的正确 RAII 组合
+	🔹 多 stream pipeline（双缓冲 / 三缓冲）
+	🔹 CUDA Graph 下 stream 生命周期怎么设计
+	🔹 CUDA + OpenGL interop 的 stream 约束
+	🔹 双缓冲 / 三缓冲 filter pipeline
+	🔹 stream + event 的真正异步计时
+	🔹 CUDA Graph 版本的 launchFilter
+	🔹 CUDA + OpenGL PBO 零拷贝版本
+	🔹 加 event 计时（不破坏并发）
+	🔹 改成 CUDA Graph 版本
+	🔹 或接入 CUDA + OpenGL PBO
+	🔹 CUDA Graph capture
+	🔹 stream + event 精确计时
+	🔹 CUDA + OpenGL PBO / Texture
+	🔹 多 stream load balancing
+	🔹 MPSC 任务队列
+	🔹把这套 capture 成 CUDA Graph
+	🔹OpenGL PBO → CUDA → texture
+	🔹做 双 stream overlap（copy / compute）
+	🔹给你一个 benchmark + event 计时模板
+	🔹 CUDA Graph capture（每个 buffer 一张 graph）
+	🔹 CUDA + OpenGL PBO（真正零拷贝显示）
+	🔹 多 GPU / 多 pipeline 调度
+	🔹 lock-free MPSC 输入队列
+	🔹 把这套 pipeline capture 成 CUDA Graph
+	🔹 CUDA + OpenGL PBO / Texture
+	🔹 back-pressure / FPS 限制 / queue
+	🔹 做 多 pipeline + load balancing
+	🔹 Graph Node Parameter Update（不用 rebuild）
+	🔹 Graph + CUDA Event 跨 pipeline 同步
+	🔹 Graph + OpenGL PBO / Vulkan interop
+	🔹 多 GPU pipeline + Graph
+	🔹 接 实时视频 / OpenGL
+	🔹 CUDA + OpenGL 实时 Sobel（PBO）
+	🔹 多 stream + CPU producer / consumer 模拟
